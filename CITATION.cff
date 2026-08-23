@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use HomoloMap, please cite this software and its archived release."
+title: "HomoloMap"
+type: software
+authors:
+  - family-names: "Dong"
+    given-names: "Changsheng"
+version: 0.1.0
+date-released: 2026-08-23
+repository-code: "https://github.com/Dthbca/HomoloMap"
+license: MIT
+

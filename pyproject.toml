@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "HomoloMap"
+version = "0.1.0"
+description = "Spatial analysis of homologous cell-type maps and brain imaging phenotypes"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name = "Dong Changsheng"}]
+keywords = ["neuroimaging", "spatial transcriptomics", "cell types", "spin test", "brain atlas"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = [
+  "joblib>=1.2",
+  "matplotlib>=3.6",
+  "neuromaps>=0.0.4",
+  "nibabel>=4.0",
+  "numpy>=1.23",
+  "pandas>=1.5",
+  "scikit-learn>=1.2",
+  "scipy>=1.9",
+  "seaborn>=0.12",
+  "statsmodels>=0.13",
+  "tqdm>=4.64",
+]
+
+[project.optional-dependencies]
+explain = ["shap>=0.42"]
+surface = ["surfplot>=0.2"]
+volume = ["nilearn>=0.10"]
+all = ["shap>=0.42", "surfplot>=0.2", "nilearn>=0.10"]
+test = ["pytest>=7.0"]
+
+[project.urls]
+Homepage = "https://github.com/Dthbca/HomoloMap"
+Repository = "https://github.com/Dthbca/HomoloMap"
+Issues = "https://github.com/Dthbca/HomoloMap/issues"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+HomoloMap = ["datasets/surfaces/**/*.gii"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
