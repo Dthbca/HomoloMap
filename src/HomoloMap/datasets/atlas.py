@@ -3,6 +3,7 @@ import numpy as np
 from pathlib import Path
 import nibabel as nib
 import os
+import warnings
 
 from .resources import fetch_resource, get_data_dir
 
@@ -141,18 +142,45 @@ def fetch_layer_ratio(*args, **kwargs):
     return _fetch_layer_ratio(*args, **kwargs)
 
 
-def fetch_enigma(atlas='DK'):
-    root_path = Path(__file__).parent
-    if atlas=='DK':
-        enigma_disease = pd.read_csv(os.path.join(root_path,'features/enigma_ct.csv'),index_col=-1)
-        enigma_disease = enigma_disease[enigma_disease.hemi=='L'].iloc[:,1:-2]
-    elif atlas == 'FGC':
-        enigma_disease = pd.read_csv(os.path.join(root_path,'features/enigma_fgc_smoothed.csv'),index_col=0)
-    else:
+def fetch_enigma(path=None, atlas='DK', *, index_col=0):
+    """Read a user-supplied legacy ENIGMA regional table.
+
+    ENIGMA maps are external brain IDPs, not package-supplied predictors. New
+    code should read the table with pandas and pass it to ``load_data`` or
+    ``prepare_analysis_data``.
+    """
+    warnings.warn(
+        "fetch_enigma is a legacy compatibility loader and is no longer part "
+        "of HomoloMap.datasets' public API. Read the external regional table "
+        "with pandas and provide it as a brain IDP instead.",
+        FutureWarning,
+        stacklevel=2,
+    )
+    if path is None:
+        raise FileNotFoundError(
+            "No ENIGMA table was provided. HomoloMap does not bundle or "
+            "download ENIGMA disease maps; pass path= to a licensed, "
+            "atlas-labelled CSV obtained from the data provider."
+        )
+    atlas = str(atlas).upper()
+    if atlas not in {'DK', 'FGC'}:
         raise ValueError(f"Unsupported atlas {atlas!r}; expected 'DK' or 'FGC'")
-
-    return enigma_disease
-
+    table_path = Path(path).expanduser()
+    if not table_path.is_file():
+        raise FileNotFoundError(f"ENIGMA table does not exist: {table_path}")
+    data = pd.read_csv(table_path, index_col=index_col)
+    if data.empty:
+        raise ValueError(f"ENIGMA table is empty: {table_path}")
+    if atlas == 'DK' and 'hemi' in data.columns:
+        data = data.loc[data['hemi'].astype(str).str.upper().eq('L')].copy()
+        data = data.drop(columns=['hemi'])
+    try:
+        numeric_index = pd.to_numeric(data.index)
+    except (TypeError, ValueError):
+        pass
+    else:
+        data.index = numeric_index
+    return data
 
 def fetch_fslr(density='32k', hemi='L', surf='inflated', base_dir=None,
                return_path=False, download=True, verbose=1):

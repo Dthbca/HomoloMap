@@ -24,7 +24,6 @@ try:
     SURFPLOT_AVAILABLE = True
 except ImportError:
     SURFPLOT_AVAILABLE = False
-    warnings.warn("surfplot not available. Surface plotting disabled.")
 
 try:
     import nibabel as nib
@@ -182,6 +181,11 @@ def plot_left(
     ... )
     """
     import os
+    if not SURFPLOT_AVAILABLE:
+        raise ImportError(
+            "Surface plotting requires the optional 'surfplot' dependency. "
+            "Install it with `python -m pip install 'HomoloMap[surface]'`."
+        )
     if 'VTK_DEFAULT_OPENGL_WINDOW' not in os.environ:
         os.environ['VTK_DEFAULT_OPENGL_WINDOW'] = (
             'vtkWin32OpenGLRenderWindow'

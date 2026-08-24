@@ -82,6 +82,10 @@ interface. Brainnetome and D99 resources should be obtained from their
 [official AFNI D99 distribution](https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/nonhuman/macaque_tempatl/atlas_d99v2.html),
 respectively.
 
+See [`THIRD_PARTY_RESOURCES.md`](THIRD_PARTY_RESOURCES.md) for the boundary
+between HomoloMap-derived data, optional cached atlas resources, and
+user-supplied imaging phenotypes, together with provider and licensing notes.
+
 ## Tutorial
 
 The documentation is split into short, task-oriented notebooks:

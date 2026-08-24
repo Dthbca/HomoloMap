@@ -217,7 +217,7 @@ def prepare_analysis_data(data=None, feature_type='ratio', ctype_level='subclass
                           layer_reclose=True):
     """Load, left-hemisphere filter, reparcellate, and align analysis tables."""
     from HomoloMap.datasets import (
-        fetch_enigma, fetch_ctype_ratio, fetch_layer_ratio, fetch_ctype_density
+        fetch_ctype_ratio, fetch_layer_ratio, fetch_ctype_density
     )
     from HomoloMap.transforms.parcellation import vol_relabel
 
