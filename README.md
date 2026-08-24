@@ -44,6 +44,10 @@ python -m pip install -e ".[all]"
 
 Python 3.9 or newer is required.
 
+## Tutorial
+
+Start with [`tutorials/01_brain_idp_analysis.ipynb`](tutorials/01_brain_idp_analysis.ipynb). It walks through the intended workflow from an external region-by-IDP table to atlas-label quality control, spatial spin tests, total multivariable contribution, optional SHAP attribution, and a CLR sensitivity analysis. The notebook includes deterministic toy IDPs for an execution check; replace them with your own BN-indexed brain maps for scientific analysis.
+
 ## What you provide
 
 The usual external input is a `pandas.DataFrame` containing brain IDPs:
