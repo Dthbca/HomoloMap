@@ -635,11 +635,11 @@ def load_data(
     
     Parameters
     ----------
-    data : str, Path, pd.DataFrame, or nibabel image
+    data : str, Path, pd.Series, pd.DataFrame, or nibabel image
         Input data:
-        - File path to NIfTI or GIFTI image
-        - Pandas DataFrame with ROI labels as rows
-        - nibabel image object
+        - CSV, NIfTI, or GIFTI file path
+        - Pandas Series or DataFrame with ROI labels as the index
+        - Loaded nibabel GiftiImage or Nifti1Image
     space : {'mni152', 'fslr', 'fsaverage', 'civet'}, default='mni152'
         Space of input data
     atlas : str, optional
@@ -668,13 +668,9 @@ def load_data(
         
     Examples
     --------
-    Load CSV file:
+    Load an already parcellated table or CSV file:
     
-    >>> data = load_data(
-    ...     'cell_types.csv',
-    ...     space='fslr',
-    ...     trg='FGC'
-    ... )
+    >>> data = load_data('brain_idps_bn.csv', atlas='BN', trg='BN', smooth=False)
     
     Load NIfTI with transformation:
     

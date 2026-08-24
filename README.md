@@ -95,12 +95,36 @@ See the [`tutorial index`](tutorials/README.md) for prerequisites, expected outp
 
 ## What you provide
 
-The usual external input is a `pandas.DataFrame` containing brain IDPs:
+The external input is one or more brain imaging-derived phenotypes (IDPs).
+`HomoloMap.transforms.load_data` accepts:
 
-- rows: atlas regions;
-- columns: IDPs, such as cortical thickness effects, functional measures, MEG frequency maps, or other regional imaging phenotypes;
-- index: numeric region labels matching the selected atlas;
-- values: one regional value per IDP (missing values are allowed only where the chosen analysis supports them).
+- a `pandas.Series` or `pandas.DataFrame` already indexed by numeric atlas labels;
+- a CSV file with region labels in its first column;
+- a scalar GIFTI surface file or loaded `nibabel.GiftiImage`;
+- a NIfTI volume file or loaded `nibabel.Nifti1Image` (install `.[volume]`);
+- any corresponding `str` or `pathlib.Path` file path.
+
+The loader returns a common ROI-by-IDP `DataFrame`: rows are atlas regions and
+columns are cortical thickness effects, functional measures, MEG frequency
+maps, disease effect maps, or other regional phenotypes. For image inputs,
+specify the source space and parcellation; `trg="BN"` produces the regional
+format used by the released HomoloMap predictors.
+
+```python
+from HomoloMap.transforms import load_data
+
+# Already parcellated DataFrame, Series, or CSV
+brain_idps = load_data(idp_input, atlas="BN", trg="BN", smooth=False)
+
+# Scalar surface/volume image; provide the matching source atlas resource
+brain_idps = load_data(
+    image_input, space="fslr", atlas="BN",
+    path="/path/to/BN.label.gii", trg="BN", smooth=False,
+)
+```
+
+Labels—not row position—define alignment. Missing values are allowed only
+where the selected downstream analysis supports them.
 
 Cell-type ratios or densities are **not** the usual external input to the analysis workflow. They are predictors supplied by HomoloMap. You may nevertheless load the released cell-type tables directly for a custom analysis.
 

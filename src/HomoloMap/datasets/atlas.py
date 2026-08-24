@@ -238,8 +238,14 @@ def fetch_parc(data_dir=None, hemi='L', key='FGC', url=None, sha256=None,
 
     if data_dir is None:
         packaged = Path(__file__).parent / 'surfaces' / 'parcellations'
-        cached = get_data_dir() / f'parcellation-{key}'
-        data_dir = packaged if (packaged / f'{ATLAS.get(key, key)}.fs_LR_32k.{hemi}.label.gii').exists() else cached
+        packaged_file = (
+            packaged /
+            f'{ATLAS.get(key, key)}.fs_LR_32k.{hemi}.label.gii'
+        )
+        data_dir = (
+            packaged if packaged_file.exists()
+            else get_data_dir() / f'parcellation-{key}'
+        )
     else:
         data_dir = Path(data_dir)
     
