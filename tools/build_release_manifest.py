@@ -7,7 +7,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).parents[1]
 OUTPUT = ROOT / "MANIFEST_SHA256.csv"
-EXCLUDED_PARTS = {".git", "build", "HomoloMap.egg-info", "__pycache__"}
+EXCLUDED_PARTS = {
+    ".git", ".pytest_cache", "build", "HomoloMap.egg-info", "__pycache__"
+}
 
 
 files = sorted(
