@@ -1,0 +1,401 @@
+source_plot,cluster,subclass
+57,Astro_1,Astro
+58,Astro_1,Astro
+60,Astro_1,Astro
+61,Astro_1,Astro
+63,Astro_1,Astro
+64,Astro_1,Astro
+ASC.1,Astro_1,Astro
+ASC.18,Astro_1,Astro
+ASC.2,Astro_1,Astro
+ASC.3,Astro_1,Astro
+ASC.4,Astro_1,Astro
+52,Astro_2,Astro
+53,Astro_2,Astro
+54,Astro_2,Astro
+55,Astro_2,Astro
+ASC.12,Astro_2,Astro
+ASC.14,Astro_2,Astro
+ASC.17,Astro_2,Astro
+ASC.5,Astro_2,Astro
+ASC.6,Astro_2,Astro
+ASC.7,Astro_2,Astro
+ASC.8,Astro_2,Astro
+ASC.9,Astro_2,Astro
+264,Chandelier_1,Chandelier
+265,Chandelier_1,Chandelier
+266,Chandelier_1,Chandelier
+PV_CHC.1,Chandelier_1,Chandelier
+PV_CHC.2,Chandelier_1,Chandelier
+PV_CHC.3,Chandelier_1,Chandelier
+PV_CHC.4,Chandelier_1,Chandelier
+PV_CHC.5,Chandelier_1,Chandelier
+14,Endo_1,Endo
+15,Endo_1,Endo
+16,Endo_1,Endo
+17,Endo_1,Endo
+18,Endo_1,Endo
+19,Endo_1,Endo
+20,Endo_1,Endo
+21,Endo_1,Endo
+22,Endo_1,Endo
+EC.1,Endo_1,Endo
+EC.2,Endo_1,Endo
+164,L2/3 IT_1,L2/3 IT
+165,L2/3 IT_1,L2/3 IT
+166,L2/3 IT_1,L2/3 IT
+168,L2/3 IT_1,L2/3 IT
+170,L2/3 IT_1,L2/3 IT
+177,L2/3 IT_1,L2/3 IT
+178,L2/3 IT_1,L2/3 IT
+L2/3/4.4,L2/3 IT_1,L2/3 IT
+126,L2/3 IT_2,L2/3 IT
+167,L2/3 IT_2,L2/3 IT
+L2/3.1,L2/3 IT_2,L2/3 IT
+L2/3.10,L2/3 IT_2,L2/3 IT
+L2/3.11,L2/3 IT_2,L2/3 IT
+L2/3.18,L2/3 IT_2,L2/3 IT
+124,L2/3 IT_3,L2/3 IT
+125,L2/3 IT_3,L2/3 IT
+L2.4,L2/3 IT_3,L2/3 IT
+L2/3.5,L2/3 IT_3,L2/3 IT
+L3/4.17,L2/3 IT_3,L2/3 IT
+129,L2/3 IT_4,L2/3 IT
+130,L2/3 IT_4,L2/3 IT
+131,L2/3 IT_4,L2/3 IT
+L2/3.13,L2/3 IT_4,L2/3 IT
+L2/3.7,L2/3 IT_4,L2/3 IT
+L3/4.2,L2/3 IT_4,L2/3 IT
+L3/4.3,L2/3 IT_4,L2/3 IT
+L3/4.8,L2/3 IT_4,L2/3 IT
+L3/4/5.1,L2/3 IT_4,L2/3 IT
+120,L2/3 IT_5,L2/3 IT
+121,L2/3 IT_5,L2/3 IT
+L2.1,L2/3 IT_5,L2/3 IT
+L2.2,L2/3 IT_5,L2/3 IT
+L2.7,L2/3 IT_5,L2/3 IT
+L2/3.17,L2/3 IT_5,L2/3 IT
+L2/3.20,L2/3 IT_5,L2/3 IT
+L2/3.9,L2/3 IT_5,L2/3 IT
+122,L2/3 IT_6,L2/3 IT
+123,L2/3 IT_6,L2/3 IT
+L2.3,L2/3 IT_6,L2/3 IT
+L2.5,L2/3 IT_6,L2/3 IT
+L2.6,L2/3 IT_6,L2/3 IT
+L2.8,L2/3 IT_6,L2/3 IT
+L2.9,L2/3 IT_6,L2/3 IT
+L2/3.12,L2/3 IT_6,L2/3 IT
+L2/3.14,L2/3 IT_6,L2/3 IT
+L2/3.15,L2/3 IT_6,L2/3 IT
+L2/3.23,L2/3 IT_6,L2/3 IT
+L2/3.3,L2/3 IT_6,L2/3 IT
+L2/3.6,L2/3 IT_6,L2/3 IT
+L2/3.8,L2/3 IT_6,L2/3 IT
+L2/3/4.3,L2/3 IT_6,L2/3 IT
+128,L2/3 IT_7,L2/3 IT
+134,L2/3 IT_7,L2/3 IT
+L3/4.10,L2/3 IT_7,L2/3 IT
+L3/4.4,L2/3 IT_7,L2/3 IT
+127,L2/3 IT_8,L2/3 IT
+L2/3/4.1,L2/3 IT_8,L2/3 IT
+L3/4.12,L2/3 IT_8,L2/3 IT
+L3/4.6,L2/3 IT_8,L2/3 IT
+135,L4 IT_1,L4 IT
+136,L4 IT_1,L4 IT
+L3/4.1,L4 IT_1,L4 IT
+L3/4.15,L4 IT_1,L4 IT
+L4.1,L4 IT_1,L4 IT
+132,L4 IT_2,L4 IT
+138,L4 IT_2,L4 IT
+L4.10,L4 IT_2,L4 IT
+L4.2,L4 IT_2,L4 IT
+L4.3,L4 IT_2,L4 IT
+L4.5,L4 IT_2,L4 IT
+L4.6,L4 IT_2,L4 IT
+L4.7,L4 IT_2,L4 IT
+L4.9,L4 IT_2,L4 IT
+133,L4 IT_3,L4 IT
+L3/4.11,L4 IT_3,L4 IT
+L3/4.13,L4 IT_3,L4 IT
+L3/4.7,L4 IT_3,L4 IT
+L3/4.9,L4 IT_3,L4 IT
+L4.4,L4 IT_3,L4 IT
+L4.8,L4 IT_3,L4 IT
+113,L5 ET_1,L5 ET
+114,L5 ET_1,L5 ET
+116,L5 ET_1,L5 ET
+117,L5 ET_1,L5 ET
+118,L5 ET_1,L5 ET
+L4/5.6,L5 ET_1,L5 ET
+137,L5 IT_1,L5 IT
+L4/5.14,L5 IT_1,L5 IT
+L4/5.15,L5 IT_1,L5 IT
+L4/5/6.1,L5 IT_1,L5 IT
+L4/5/6.4,L5 IT_1,L5 IT
+143,L5 IT_2,L5 IT
+144,L5 IT_2,L5 IT
+L4/5.17,L5 IT_2,L5 IT
+L4/5.18,L5 IT_2,L5 IT
+L4/5.2,L5 IT_2,L5 IT
+L4/5.3,L5 IT_2,L5 IT
+L4/5.7,L5 IT_2,L5 IT
+L4/5.9,L5 IT_2,L5 IT
+L5/6.2,L5 IT_2,L5 IT
+140,L5 IT_3,L5 IT
+141,L5 IT_3,L5 IT
+L4/5.1,L5 IT_3,L5 IT
+L4/5.10,L5 IT_3,L5 IT
+L4/5.11,L5 IT_3,L5 IT
+L4/5.12,L5 IT_3,L5 IT
+L4/5.4,L5 IT_3,L5 IT
+139,L5 IT_4,L5 IT
+L4/5.13,L5 IT_4,L5 IT
+L4/5.8,L5 IT_4,L5 IT
+142,L5 IT_5,L5 IT
+L4/5.5,L5 IT_5,L5 IT
+83,L5/6 NP_1,L5/6 NP
+L4/5/6.13,L5/6 NP_1,L5/6 NP
+85,L5/6 NP_2,L5/6 NP
+86,L5/6 NP_2,L5/6 NP
+87,L5/6 NP_2,L5/6 NP
+88,L5/6 NP_2,L5/6 NP
+89,L5/6 NP_2,L5/6 NP
+90,L5/6 NP_2,L5/6 NP
+91,L5/6 NP_2,L5/6 NP
+92,L5/6 NP_2,L5/6 NP
+93,L5/6 NP_2,L5/6 NP
+94,L5/6 NP_2,L5/6 NP
+95,L5/6 NP_2,L5/6 NP
+96,L5/6 NP_2,L5/6 NP
+L4/5/6.10,L5/6 NP_2,L5/6 NP
+L4/5/6.11,L5/6 NP_2,L5/6 NP
+L4/5/6.12,L5/6 NP_2,L5/6 NP
+L4/5/6.14,L5/6 NP_2,L5/6 NP
+107,L6 CT_1,L6 CT
+108,L6 CT_1,L6 CT
+L5/6.8,L6 CT_1,L6 CT
+L6.2,L6 CT_1,L6 CT
+L6.7,L6 CT_1,L6 CT
+100,L6 CT_2,L6 CT
+109,L6 CT_2,L6 CT
+110,L6 CT_2,L6 CT
+112,L6 CT_2,L6 CT
+L6.1,L6 CT_2,L6 CT
+L6.8,L6 CT_2,L6 CT
+145,L6 IT_1,L6 IT
+146,L6 IT_1,L6 IT
+147,L6 IT_1,L6 IT
+L4/5/6.5,L6 IT_1,L6 IT
+L5/6.5,L6 IT_1,L6 IT
+149,L6 IT_2,L6 IT
+L4/5/6.6,L6 IT_2,L6 IT
+L4/5/6.7,L6 IT_2,L6 IT
+L5/6.3,L6 IT_2,L6 IT
+L5/6.6,L6 IT_2,L6 IT
+L5/6.7,L6 IT_2,L6 IT
+148,L6 IT_3,L6 IT
+L4/5/6.8,L6 IT_3,L6 IT
+L5/6.1,L6 IT_3,L6 IT
+L5/6.10,L6 IT_3,L6 IT
+L5/6.4,L6 IT_3,L6 IT
+150,L6 IT Car3_1,L6 IT Car3
+151,L6 IT Car3_1,L6 IT Car3
+152,L6 IT Car3_1,L6 IT Car3
+L4/5/6.2,L6 IT Car3_1,L6 IT Car3
+L4/5/6.3,L6 IT Car3_1,L6 IT Car3
+L4/5/6.9,L6 IT Car3_1,L6 IT Car3
+103,L6b_1,L6b
+104,L6b_1,L6b
+97,L6b_1,L6b
+98,L6b_1,L6b
+99,L6b_1,L6b
+L6.4,L6b_1,L6b
+L6.9,L6b_1,L6b
+101,L6b_2,L6b
+102,L6b_2,L6b
+105,L6b_2,L6b
+L6.5,L6b_2,L6b
+L6.6,L6b_2,L6b
+106,L6b_3,L6b
+L6.3,L6b_3,L6b
+286,Lamp5_1,Lamp5
+RELN.1,Lamp5_1,Lamp5
+RELN.3,Lamp5_1,Lamp5
+287,Lamp5_2,Lamp5
+288,Lamp5_2,Lamp5
+LAMP5.10,Lamp5_2,Lamp5
+LAMP5.3,Lamp5_2,Lamp5
+LAMP5.4,Lamp5_2,Lamp5
+LAMP5.5,Lamp5_2,Lamp5
+LAMP5.6,Lamp5_2,Lamp5
+LAMP5.7,Lamp5_2,Lamp5
+LAMP5.8,Lamp5_2,Lamp5
+LAMP5.9,Lamp5_2,Lamp5
+267,Lamp5_Lhx6_1,Lamp5_Lhx6
+268,Lamp5_Lhx6_1,Lamp5_Lhx6
+269,Lamp5_Lhx6_1,Lamp5_Lhx6
+270,Lamp5_Lhx6_1,Lamp5_Lhx6
+271,Lamp5_Lhx6_1,Lamp5_Lhx6
+272,Lamp5_Lhx6_1,Lamp5_Lhx6
+273,Lamp5_Lhx6_1,Lamp5_Lhx6
+274,Lamp5_Lhx6_1,Lamp5_Lhx6
+275,Lamp5_Lhx6_1,Lamp5_Lhx6
+LAMP5.1,Lamp5_Lhx6_1,Lamp5_Lhx6
+LAMP5.2,Lamp5_Lhx6_1,Lamp5_Lhx6
+10,Micro-PVM_1,Micro-PVM
+11,Micro-PVM_1,Micro-PVM
+5,Micro-PVM_1,Micro-PVM
+6,Micro-PVM_1,Micro-PVM
+7,Micro-PVM_1,Micro-PVM
+8,Micro-PVM_1,Micro-PVM
+9,Micro-PVM_1,Micro-PVM
+MG.1,Micro-PVM_1,Micro-PVM
+12,Micro-PVM_2,Micro-PVM
+3,Micro-PVM_2,Micro-PVM
+4,Micro-PVM_2,Micro-PVM
+MG.2,Micro-PVM_2,Micro-PVM
+33,OPC_1,OPC
+34,OPC_1,OPC
+35,OPC_1,OPC
+36,OPC_1,OPC
+37,OPC_1,OPC
+38,OPC_1,OPC
+OPC.1,OPC_1,OPC
+OPC.2,OPC_1,OPC
+39,Oligo_1,Oligo
+OLG.10,Oligo_1,Oligo
+40,Oligo_2,Oligo
+41,Oligo_2,Oligo
+43,Oligo_2,Oligo
+44,Oligo_2,Oligo
+45,Oligo_2,Oligo
+46,Oligo_2,Oligo
+47,Oligo_2,Oligo
+49,Oligo_2,Oligo
+OLG.11,Oligo_2,Oligo
+OLG.3,Oligo_2,Oligo
+OLG.4,Oligo_2,Oligo
+OLG.5,Oligo_2,Oligo
+OLG.6,Oligo_2,Oligo
+OLG.7,Oligo_2,Oligo
+OLG.8,Oligo_2,Oligo
+OLG.9,Oligo_2,Oligo
+279,Pax6_1,Pax6
+RELN.6,Pax6_1,Pax6
+RELN.8,Pax6_1,Pax6
+276,Pax6_2,Pax6
+277,Pax6_2,Pax6
+278,Pax6_2,Pax6
+RELN.4,Pax6_2,Pax6
+255,Pvalb_1,Pvalb
+258,Pvalb_1,Pvalb
+PVALB.21,Pvalb_1,Pvalb
+PVALB.8,Pvalb_1,Pvalb
+237,Pvalb_2,Pvalb
+240,Pvalb_2,Pvalb
+PVALB.20,Pvalb_2,Pvalb
+256,Pvalb_3,Pvalb
+PVALB.12,Pvalb_3,Pvalb
+PVALB.15,Pvalb_3,Pvalb
+259,Pvalb_4,Pvalb
+260,Pvalb_4,Pvalb
+261,Pvalb_4,Pvalb
+262,Pvalb_4,Pvalb
+263,Pvalb_4,Pvalb
+PVALB.1,Pvalb_4,Pvalb
+PVALB.11,Pvalb_4,Pvalb
+PVALB.14,Pvalb_4,Pvalb
+PVALB.16,Pvalb_4,Pvalb
+PVALB.19,Pvalb_4,Pvalb
+PVALB.2,Pvalb_4,Pvalb
+PVALB.5,Pvalb_4,Pvalb
+PVALB.6,Pvalb_4,Pvalb
+236,Pvalb_5,Pvalb
+257,Pvalb_5,Pvalb
+PVALB.24,Pvalb_5,Pvalb
+PVALB.28,Pvalb_5,Pvalb
+PVALB.9,Pvalb_5,Pvalb
+281,Sncg_1,Sncg
+RELN.9,Sncg_1,Sncg
+282,Sncg_2,Sncg
+RELN.2,Sncg_2,Sncg
+RELN.7,Sncg_2,Sncg
+283,Sncg_3,Sncg
+RELN.5,Sncg_3,Sncg
+280,Sncg_4,Sncg
+RELN.10,Sncg_4,Sncg
+254,Sst_1,Sst
+SST.14,Sst_1,Sst
+SST.5,Sst_1,Sst
+239,Sst_10,Sst
+SST.15,Sst_10,Sst
+248,Sst_2,Sst
+SST.11,Sst_2,Sst
+SST.17,Sst_2,Sst
+242,Sst_3,Sst
+SST.1,Sst_3,Sst
+251,Sst_4,Sst
+SST.21,Sst_4,Sst
+SST.24,Sst_4,Sst
+SST.26,Sst_4,Sst
+SST.4,Sst_4,Sst
+SST.7,Sst_4,Sst
+243,Sst_5,Sst
+SST.10,Sst_5,Sst
+SST.18,Sst_5,Sst
+SST.3,Sst_5,Sst
+SST.31,Sst_5,Sst
+SST.9,Sst_5,Sst
+247,Sst_6,Sst
+252,Sst_6,Sst
+253,Sst_6,Sst
+SST.12,Sst_6,Sst
+SST.16,Sst_6,Sst
+SST.2,Sst_6,Sst
+SST.28,Sst_6,Sst
+SST.29,Sst_6,Sst
+SST.30,Sst_6,Sst
+249,Sst_7,Sst
+SST.20,Sst_7,Sst
+241,Sst_8,Sst
+SST.8,Sst_8,Sst
+250,Sst_9,Sst
+SST.13,Sst_9,Sst
+SST.22,Sst_9,Sst
+SST.23,Sst_9,Sst
+235,Sst Chodl_1,Sst Chodl
+244,Sst Chodl_1,Sst Chodl
+245,Sst Chodl_1,Sst Chodl
+SST.25,Sst Chodl_1,Sst Chodl
+23,VLMC_1,VLMC
+25,VLMC_1,VLMC
+26,VLMC_1,VLMC
+27,VLMC_1,VLMC
+28,VLMC_1,VLMC
+30,VLMC_1,VLMC
+31,VLMC_1,VLMC
+VLMC.1,VLMC_1,VLMC
+284,Vip_1,Vip
+VIP_RELN.4,Vip_1,Vip
+291,Vip_2,Vip
+VIP_RELN.1,Vip_2,Vip
+285,Vip_3,Vip
+VIP_RELN.7,Vip_3,Vip
+290,Vip_4,Vip
+VIP.1,Vip_4,Vip
+289,Vip_5,Vip
+VIP.4,Vip_5,Vip
+295,Vip_6,Vip
+VIP_RELN.2,Vip_6,Vip
+292,Vip_7,Vip
+VIP_RELN.3,Vip_7,Vip
+VIP_RELN.6,Vip_7,Vip
+293,Vip_8,Vip
+294,Vip_8,Vip
+VIP.2,Vip_8,Vip
+VIP.3,Vip_8,Vip
+VIP.5,Vip_8,Vip
+VIP.7,Vip_8,Vip
+296,Vip_9,Vip
+VIP_RELN.5,Vip_9,Vip
+VIP_RELN.8,Vip_9,Vip

@@ -1,0 +1,97 @@
+level,label,parent_subclass,n_source_plots,n_clusters
+subclass,Astro,,23,2
+subclass,Chandelier,,8,1
+subclass,Endo,,11,1
+subclass,L2/3 IT,,59,8
+subclass,L4 IT,,21,3
+subclass,L5 ET,,6,1
+subclass,L5 IT,,26,5
+subclass,L5/6 NP,,18,2
+subclass,L6 CT,,11,2
+subclass,L6 IT,,16,3
+subclass,L6 IT Car3,,6,1
+subclass,L6b,,14,3
+subclass,Lamp5,,13,2
+subclass,Lamp5_Lhx6,,11,1
+subclass,Micro-PVM,,12,2
+subclass,OPC,,8,1
+subclass,Oligo,,18,2
+subclass,Pax6,,7,2
+subclass,Pvalb,,28,5
+subclass,Sncg,,9,4
+subclass,Sst,,39,10
+subclass,Sst Chodl,,4,1
+subclass,VLMC,,8,1
+subclass,Vip,,24,9
+cluster,Astro_1,Astro,11,1
+cluster,Astro_2,Astro,12,1
+cluster,Chandelier_1,Chandelier,8,1
+cluster,Endo_1,Endo,11,1
+cluster,L2/3 IT_1,L2/3 IT,8,1
+cluster,L2/3 IT_2,L2/3 IT,6,1
+cluster,L2/3 IT_3,L2/3 IT,5,1
+cluster,L2/3 IT_4,L2/3 IT,9,1
+cluster,L2/3 IT_5,L2/3 IT,8,1
+cluster,L2/3 IT_6,L2/3 IT,15,1
+cluster,L2/3 IT_7,L2/3 IT,4,1
+cluster,L2/3 IT_8,L2/3 IT,4,1
+cluster,L4 IT_1,L4 IT,5,1
+cluster,L4 IT_2,L4 IT,9,1
+cluster,L4 IT_3,L4 IT,7,1
+cluster,L5 ET_1,L5 ET,6,1
+cluster,L5 IT_1,L5 IT,5,1
+cluster,L5 IT_2,L5 IT,9,1
+cluster,L5 IT_3,L5 IT,7,1
+cluster,L5 IT_4,L5 IT,3,1
+cluster,L5 IT_5,L5 IT,2,1
+cluster,L5/6 NP_1,L5/6 NP,2,1
+cluster,L5/6 NP_2,L5/6 NP,16,1
+cluster,L6 CT_1,L6 CT,5,1
+cluster,L6 CT_2,L6 CT,6,1
+cluster,L6 IT Car3_1,L6 IT Car3,6,1
+cluster,L6 IT_1,L6 IT,5,1
+cluster,L6 IT_2,L6 IT,6,1
+cluster,L6 IT_3,L6 IT,5,1
+cluster,L6b_1,L6b,7,1
+cluster,L6b_2,L6b,5,1
+cluster,L6b_3,L6b,2,1
+cluster,Lamp5_1,Lamp5,3,1
+cluster,Lamp5_2,Lamp5,10,1
+cluster,Lamp5_Lhx6_1,Lamp5_Lhx6,11,1
+cluster,Micro-PVM_1,Micro-PVM,8,1
+cluster,Micro-PVM_2,Micro-PVM,4,1
+cluster,OPC_1,OPC,8,1
+cluster,Oligo_1,Oligo,2,1
+cluster,Oligo_2,Oligo,16,1
+cluster,Pax6_1,Pax6,3,1
+cluster,Pax6_2,Pax6,4,1
+cluster,Pvalb_1,Pvalb,4,1
+cluster,Pvalb_2,Pvalb,3,1
+cluster,Pvalb_3,Pvalb,3,1
+cluster,Pvalb_4,Pvalb,13,1
+cluster,Pvalb_5,Pvalb,5,1
+cluster,Sncg_1,Sncg,2,1
+cluster,Sncg_2,Sncg,3,1
+cluster,Sncg_3,Sncg,2,1
+cluster,Sncg_4,Sncg,2,1
+cluster,Sst Chodl_1,Sst Chodl,4,1
+cluster,Sst_1,Sst,3,1
+cluster,Sst_10,Sst,2,1
+cluster,Sst_2,Sst,3,1
+cluster,Sst_3,Sst,2,1
+cluster,Sst_4,Sst,6,1
+cluster,Sst_5,Sst,6,1
+cluster,Sst_6,Sst,9,1
+cluster,Sst_7,Sst,2,1
+cluster,Sst_8,Sst,2,1
+cluster,Sst_9,Sst,4,1
+cluster,VLMC_1,VLMC,8,1
+cluster,Vip_1,Vip,2,1
+cluster,Vip_2,Vip,2,1
+cluster,Vip_3,Vip,2,1
+cluster,Vip_4,Vip,2,1
+cluster,Vip_5,Vip,2,1
+cluster,Vip_6,Vip,2,1
+cluster,Vip_7,Vip,3,1
+cluster,Vip_8,Vip,6,1
+cluster,Vip_9,Vip,3,1

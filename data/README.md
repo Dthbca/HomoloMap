@@ -18,6 +18,8 @@ Both BN tables are mapped compositions: only source features resolved by the sup
 
 ## Mapping provenance
 
+- Canonical mapping source: `Macaque_ST/notebook/cluster_mapping_dict.csv`.
+- Verified canonical SHA256: `996255b8ad827615dcbe786ef2ae0a3b7dcaae062971d1b4eeb445726f9a8377`.
 - Mapping key: source feature name matched exactly to the `plot` column in `mappings/cluster_mapping_dict.csv`.
 - Mapping coverage: 191 of 226 ratio features.
 - The full mapping table contains 24 subclasses and 72 clusters; the released ratio source resolves to 23 subclasses and 71 clusters because not every mapping category is represented among the 191 mapped ratio features.
@@ -33,6 +35,9 @@ The complete machine-readable provenance is stored in:
 - `metadata/BN_23_subclass_mapping_audit.json`
 - `metadata/BN_71_cluster_mapping_audit.json`
 - `metadata/MAP_MANIFEST.csv`
+- `metadata/MAPPING_AUDIT.json`
+
+The canonical file is preserved byte-for-byte as `mappings/cluster_mapping_dict.csv`. For easier browsing, `mappings/cluster_mapping_table.csv` contains the same 400 mappings with explicit `source_plot` naming and stable sorting. `mappings/cluster_mapping_summary.csv` reports the number of source plots per subclass and cluster.
 
 ## Loading the maps
 
