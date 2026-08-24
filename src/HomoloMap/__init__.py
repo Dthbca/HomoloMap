@@ -3,17 +3,16 @@
 OFF_SCREEN = False
 
 """
-HomoloMap: Linking Human Brain Organization to Cellular Architecture
-=====================================================================
+HomoloMap: Cell-Type Maps and Brain Imaging Phenotypes
+=======================================================
 
-A cross-species toolkit that combines cortical areal alignment with
-transcriptomic cell-type homology to construct human cortical cell-type maps
-and relate them to imaging-derived phenotypes (IDPs).
+A Python toolkit for relating released human-aligned cortical cell-type maps
+to user-supplied imaging-derived phenotypes (IDPs).
 
 Main Features
 -------------
-- Construct and audit human-aligned subclass and cluster maps
-- Load and transform brain data across macaque and human atlas spaces
+- Load and audit subclass and cluster cell-type maps
+- Load and transform brain data across supported atlas spaces
 - Compute spatial correlations with proper null models (spin tests)
 - Perform feature importance analysis (SHAP, dominance)
 - Visualize brain maps and statistical results

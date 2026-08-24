@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "HomoloMap"
 version = "0.1.0"
-description = "Cross-species mapping of cellular architecture to human brain imaging phenotypes"
+description = "Relate human-aligned cortical cell-type maps to brain imaging phenotypes"
 readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}

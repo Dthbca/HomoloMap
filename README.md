@@ -1,28 +1,21 @@
 # HomoloMap
 
-HomoloMap links the macroscale organization of the human brain to its underlying cellular architecture. It is a cross-species framework that uses whole-cortex macaque spatial transcriptomics to reconstruct cell-type-resolved maps of the human cortex and relate them directly to regional brain imaging-derived phenotypes (IDPs).
+HomoloMap is a Python package for relating regional human brain imaging-derived phenotypes (IDPs) to cell-type-resolved cortical maps. Its main external input is a region-by-IDP table; the package provides released cell-type maps, atlas transformations, spatial null models, multivariable analyses, and visualization utilities.
 
-Unlike imaging-transcriptomic approaches that infer cell composition by deconvolving bulk tissue atlases, HomoloMap combines two complementary correspondences: spatial alignment between macaque and human cortical areas, and transcriptomic-homology-guided alignment between macaque spatial cell types and human single-cell taxonomies. This joint areal-and-cellular mapping yields continuous cortical maps at both subclass and fine cluster resolution. In the associated benchmarking analyses, these maps preserve cross-regional organization observed in human single-cell profiles more consistently than the evaluated deconvolution-based estimates. HomoloMap can then test how cellular architecture relates to cortical phenotypes across scales, from macroscale imaging maps to laminar variation, and can project study-specific cell-type signatures onto the cortical surface.
+The released maps combine the whole-cortex macaque spatial-transcriptomic dataset of [Chen *et al.* (2023)](https://doi.org/10.1016/j.cell.2023.06.009) with the integrated adult human brain single-nucleus RNA-sequencing taxonomy of [Siletti *et al.* (2023)](https://doi.org/10.1126/science.add7046). Macaque spatial cell labels are harmonized to the human reference at subclass and cluster levels. Cortical areal correspondence follows the cross-species joint-embedding method of [Xu *et al.* (2020)](https://doi.org/10.1016/j.neuroimage.2020.117346), which extracts matched functional-connectivity gradients in a shared macaque–human space and uses them to guide cortical alignment. Regional source maps in the [D99 macaque atlas](https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/nonhuman/macaque_tempatl/atlas_d99v2.html) are then summarized in the [Human Brainnetome Atlas](https://doi.org/10.1093/cercor/bhw157).
 
-The released maps originate from the macaque single-cell spatial-transcriptomic atlas of [Chen *et al.* (2023)](https://doi.org/10.1016/j.cell.2023.06.009), represented regionally in the [D99 macaque atlas](https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/nonhuman/macaque_tempatl/atlas_d99v2.html). The project mapping table ([`cluster_mapping_dict.csv`](data/mappings/cluster_mapping_dict.csv)) aggregates macaque `plot` labels into human-aligned subclass and cluster groups before spatial relabeling to the [Human Brainnetome Atlas](https://doi.org/10.1093/cercor/bhw157). Unmapped source types are audited, and ratio maps are reclosed after aggregation and spatial relabeling. Homologous labels indicate transcriptomic correspondence, not identical abundance or molecular state; mapping coverage and unresolved features must therefore be reported.
+HomoloMap records unmapped source types and retained mapping coverage rather than silently discarding them. Ratio maps are reclosed after cell-type aggregation and spatial relabeling. The resulting homologous labels represent transcriptomic correspondence and should not be interpreted as evidence of identical abundance or molecular state across species.
 
-## What is new
-
-- **Joint areal and cellular alignment:** links homologous cortical regions and transcriptomically related cell types in one auditable workflow.
-- **Cell-type-resolved human cortical maps:** provides continuous BN maps at 23-subclass and 71-cluster resolutions rather than only broad deconvolved classes.
-- **Spatially faithful integration:** retains the cortical organization of spatially measured cell composition and evaluates associations with spatial-autocorrelation-aware null models.
-- **Cross-scale analysis:** connects cell types to regional imaging phenotypes, brain-disorder maps, functional measures, and cortical-layer variation.
-- **Extensible signature projection:** supports aggregation and spatial projection of cell-type definitions derived from single-cell studies.
 
 ## Main capabilities
 
-- Map fine macaque spatial cell labels to human-aligned subclass or cluster resolution with coverage audits.
-- Relabel cortical maps between macaque and human atlas spaces.
+- Load released human-aligned maps at subclass or cluster resolution with coverage audits.
+- Transform cortical data between supported atlas spaces.
 - Work with ratio, density, CLR, and ILR feature representations.
 - Generate spatial null models and run spin-based association tests.
 - Fit linear, random-forest, and support-vector models.
 - Summarize total model performance, dominance contribution, and SHAP attribution.
-- Analyze both whole-cortex and laminar cell composition against imaging phenotypes.
+- Analyze whole-cortex or laminar cell composition against user-supplied IDPs.
 - Produce cortical surface plots, heatmaps, and contribution summaries.
 
 ## Included cell-type maps
