@@ -16,4 +16,3 @@ ratios = pd.DataFrame(
 
 clr = transform_composition(ratios, method="clr")
 print(clr.round(3))
-
