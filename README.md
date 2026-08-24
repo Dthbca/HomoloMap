@@ -110,7 +110,7 @@ Cell-type ratios or densities are **not** the usual external input to the analys
 - `src/HomoloMap/stats`: spatial nulls, model analysis, and laminar statistics.
 - `src/HomoloMap/plotting.py`: surface and statistical visualization.
 - `tutorials`: ordered, task-oriented notebooks for the complete IDP workflow.
-- `examples`: small examples for loading released maps and preparing external IDPs.
+- `examples`: one minimal compositional-transform example; the complete workflow lives in `tutorials`.
 - `tests`: lightweight package tests.
 - `data`: original D99 maps, HomoloMap-derived BN maps, mapping table, and provenance audits.
 - `src/HomoloMap/datasets`: dataset loaders plus the canonical D99/BN cell-type resources used by the public workflow.

@@ -24,3 +24,5 @@ surface directory to the loader.
 
 Every notebook ends with a compact visualization generated from the current
 inputs. Replacing the toy IDPs therefore updates the figures automatically.
+GitHub also displays a deterministic preview near the top of each notebook so
+the expected visual output remains visible before the notebook is executed.
