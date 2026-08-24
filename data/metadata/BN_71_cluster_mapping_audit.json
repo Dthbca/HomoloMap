@@ -1,5 +1,17 @@
 {
   "source": "data/maps/D99/ctype_ratio_plot_D99.csv",
+  "celltype_mapping": "data/mappings/cluster_mapping_dict.csv",
+  "celltype_mapping_sha256": "996255b8ad827615dcbe786ef2ae0a3b7dcaae062971d1b4eeb445726f9a8377",
+  "mapping_join": "D99 feature column -> plot (exact match)",
+  "generation_order": [
+    "retain exactly mapped D99 features",
+    "aggregate source features to cluster by sum",
+    "reclose mapped composition within each D99 region",
+    "relabel D99 to BN by cross-space mean aggregation",
+    "reindex to BN labels 1,3,...,209",
+    "fill absent target contributions with zero",
+    "reclose within each BN region"
+  ],
   "raw_shape": [
     132,
     226

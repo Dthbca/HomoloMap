@@ -14,6 +14,11 @@ This directory contains original D99 cell-type maps and their HomoloMap-derived 
 - `maps/BN/ctype_ratio_BN_23_subclass.csv`: 105 BN cortical regions × 23 subclasses.
 - `maps/BN/ctype_ratio_BN_71_cluster.csv`: 105 BN cortical regions × 71 clusters.
 
+Both BN tables were regenerated and byte-for-byte verified against the maps
+produced with the canonical `cluster_mapping_dict.csv` (SHA256
+`996255b8ad827615dcbe786ef2ae0a3b7dcaae062971d1b4eeb445726f9a8377`).
+Source feature names are joined to the mapping's `plot` column by exact match.
+
 Both BN tables are mapped compositions: only source features resolved by the supplied mapping table are represented. Each row was reclosed after mapping and regional relabeling, so the 23 or 71 components sum to one within numerical precision. Values therefore mean relative composition among successfully mapped cell types, not absolute abundance among all cells.
 
 ## Mapping provenance
