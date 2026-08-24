@@ -49,7 +49,14 @@ Python 3.9 or newer is required.
 
 ## Tutorial
 
-Start with [`tutorials/01_brain_idp_analysis.ipynb`](tutorials/01_brain_idp_analysis.ipynb). It walks through the intended workflow from an external region-by-IDP table to atlas-label quality control, spatial spin tests, total multivariable contribution, optional SHAP attribution, and a CLR sensitivity analysis. The notebook includes deterministic toy IDPs for an execution check; replace them with your own BN-indexed brain maps for scientific analysis.
+The documentation is split into short, task-oriented notebooks:
+
+1. [`Prepare brain IDPs`](tutorials/01_prepare_brain_idps.ipynb): input format, BN label alignment, quality control, and saved analysis tables.
+2. [`Spatial spin tests`](tutorials/02_spin_test.ipynb): individual cell-type associations and FDR correction.
+3. [`Total contribution and SHAP`](tutorials/03_total_contribution_and_shap.ipynb): joint model performance and optional feature attribution.
+4. [`CLR sensitivity`](tutorials/04_clr_sensitivity.ipynb): comparison of mapped ratios with a centered log-ratio representation.
+
+See the [`tutorial index`](tutorials/README.md) for prerequisites, expected outputs, and recommended execution order. Each notebook is focused on one analytical question and can be opened independently. Deterministic toy IDPs are provided only to check execution; replace them with your own BN-indexed brain maps for scientific analysis.
 
 ## What you provide
 
@@ -62,122 +69,13 @@ The usual external input is a `pandas.DataFrame` containing brain IDPs:
 
 Cell-type ratios or densities are **not** the usual external input to the analysis workflow. They are predictors supplied by HomoloMap. You may nevertheless load the released cell-type tables directly for a custom analysis.
 
-## Tutorial: relate brain IDPs to cell-type maps
-
-### 1. Prepare an IDP table
-
-```python
-import pandas as pd
-
-# CSV layout:
-# region,myelin_IDP,MEG_alpha_IDP
-# 1,0.42,-0.18
-# 3,0.37,-0.11
-# ...
-idps = pd.read_csv("brain_idps_bn.csv", index_col=0)
-idps.index = idps.index.astype(int)
-```
-
-The example uses Brainnetome (BN) labels. The distributed BN maps contain 105 cortical regions with labels `1, 3, ..., 209`, so the IDP table should use the same labels or a subset of them.
-
-### 2. Inspect and align the supplied cell-type map
-
-```python
-from pathlib import Path
-import pandas as pd
-
-celltypes = pd.read_csv(
-    Path("data/maps/BN/ctype_ratio_BN_23_subclass.csv"),
-    index_col=0,
-)
-celltypes.index = celltypes.index.astype(int)
-
-shared = celltypes.index.intersection(idps.index, sort=False)
-X = celltypes.loc[shared]
-Y = idps.loc[shared]
-
-print(f"Using {len(shared)} shared BN regions")
-print(f"Predictors: {X.shape[1]} cell-type subclasses")
-print(f"Outcomes: {Y.shape[1]} brain IDPs")
-```
-
-Use `ctype_ratio_BN_71_cluster.csv` instead when finer cluster-level interpretation is required. Subclass and cluster analyses should be reported as distinct feature resolutions, not pooled into one multiple-testing family.
-
-### 3. Run the standard analysis workflow
-
-For package-managed cell-type predictors, pass the external IDP table through `data`:
-
-```python
-from HomoloMap.utils import run_analysis
-
-result = run_analysis(
-    data=idps,                 # external outcomes, not cell-type data
-    atlas="BN",
-    feature_type="ratio",
-    ctype_level="subclass",
-    n_spins=1000,
-    metric="pearsonr",
-    cumulative=True,
-    mode="linear",
-    explanations="shap",     # or "dominance" for linear models
-    unmapped="drop",
-    renormalize=True,
-    random_state=42,
-)
-
-spin_results = result["correlation"]
-total_model = result["cumulative_effects"]
-celltype_explanations = result["explanations"]
-```
-
-The outputs answer complementary questions:
-
-- `correlation`: which individual cell-type maps are spatially associated with each IDP, using spin-based nulls and adjusted p-values;
-- `cumulative_effects`: how much spatial variation in each IDP is explained jointly by all selected cell-type predictors, with spatial permutation inference;
-- `explanations`: how the fitted multivariable model distributes contribution across individual cell types (SHAP) or predictors (dominance analysis).
-
-### 4. CLR sensitivity analysis for ratio maps
-
-Raw mapped ratios are the primary interpretable representation. Because ratios are compositional, repeat the analysis with a centered log-ratio (CLR) transform as a sensitivity analysis:
-
-```python
-clr_result = run_analysis(
-    data=idps,
-    atlas="BN",
-    feature_type="ratio",
-    ctype_level="subclass",
-    n_spins=1000,
-    cumulative=True,
-    explanations="shap",
-    renormalize=True,
-    correlation_transform="clr",
-    cumulative_transform="clr",
-    explanation_transform="clr",
-    zero_method="multiplicative",
-    random_state=42,
-)
-```
-
-CLR coefficients and SHAP values describe log-ratio contrasts, so they should not be interpreted as absolute abundance effects. CLR is not appropriate for density features unless those values have first been given a defensible compositional meaning.
-
-### 5. Reproducibility checks
-
-Before interpreting results, verify that:
-
-1. the IDP and cell-type tables use the same atlas and label convention;
-2. the number and identity of shared regions are recorded;
-3. mapping coverage and unresolved source cell types are reported;
-4. each stated multiple-testing family is corrected separately;
-5. atlas, hemisphere, spin method, number of rotations, random seed, feature resolution, and compositional transform are saved with the results.
-
-See the docstrings in `HomoloMap.datasets`, `HomoloMap.transforms`, `HomoloMap.stats`, and `HomoloMap.utils` for the current API. The package is in alpha development; validate results before scientific interpretation.
-
 ## Repository layout
 
 - `src/HomoloMap/datasets`: dataset loaders and mapping utilities.
 - `src/HomoloMap/transforms`: atlas, geometry, smoothing, and composition transforms.
 - `src/HomoloMap/stats`: spatial nulls, model analysis, and laminar statistics.
 - `src/HomoloMap/plotting.py`: surface and statistical visualization.
+- `tutorials`: ordered, task-oriented notebooks for the complete IDP workflow.
 - `examples`: small examples for loading released maps and preparing external IDPs.
 - `tests`: lightweight package tests.
 - `data`: original D99 maps, HomoloMap-derived BN maps, mapping table, and provenance audits.
