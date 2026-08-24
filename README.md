@@ -6,6 +6,9 @@ The released maps combine the whole-cortex macaque spatial-transcriptomic datase
 
 HomoloMap records unmapped source types and retained mapping coverage rather than silently discarding them. Ratio maps are reclosed after cell-type aggregation and spatial relabeling. The resulting homologous labels represent transcriptomic correspondence and should not be interpreted as evidence of identical abundance or molecular state across species.
 
+[![HomoloMap workflow: macaque spatial transcriptomics and human single-nucleus references are harmonized into human-aligned Brainnetome cell-type maps for association with brain imaging-derived phenotypes.](docs/figures/HomoloMap_overview.png)](docs/figures/HomoloMap_overview.pdf)
+
+*HomoloMap combines joint-embedding cell-type homology with cortical alignment to generate human-aligned cell-type maps, which can then be related to external brain imaging-derived phenotypes using spatial association tests, total-contribution models, and cell-type attribution. Click the figure for the vector PDF.*
 
 ## Main capabilities
 
