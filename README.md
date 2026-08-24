@@ -79,7 +79,7 @@ Cell-type ratios or densities are **not** the usual external input to the analys
 - `examples`: small examples for loading released maps and preparing external IDPs.
 - `tests`: lightweight package tests.
 - `data`: original D99 maps, HomoloMap-derived BN maps, mapping table, and provenance audits.
-- `src/HomoloMap/datasets`: installation-ready annotations, surfaces, atlas volumes, and the canonical D99/BN resources used by the loaders.
+- `src/HomoloMap/datasets`: dataset loaders plus the canonical D99/BN cell-type resources used by the public workflow.
 
 The repository includes released D99 and BN cell-type maps. Project-specific brain IDPs are not included and are expected to be supplied by the user.
 
