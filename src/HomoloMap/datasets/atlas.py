@@ -4,6 +4,8 @@ from pathlib import Path
 import nibabel as nib
 import os
 
+from .resources import fetch_resource, get_data_dir
+
 ATLAS = dict(
     DK='Desikan', Yeo17='Yeo_JNeurophysiol11_17Networks', Yeo7='Yeo_JNeurophysiol11_7Networks',
     FGC='Zhang_fine-grained'
@@ -185,38 +187,60 @@ def fetch_enigma(atlas='DK'):
     return enigma_disease
 
 
-def fetch_fslr(density='32k', hemi='L', surf='inflated', base_dir=None,return_path = False):
-    if base_dir is None:
-        root_path = Path(__file__).parent
-        base_dir = root_path / 'surfaces' / 'fslr_32k'
-    else:
+def fetch_fslr(density='32k', hemi='L', surf='inflated', base_dir=None,
+               return_path=False, download=True, verbose=1):
+    """Fetch an fsLR surface through neuromaps and cache it outside the package."""
+    hemi = hemi.upper()
+    if hemi not in {'L', 'R'}:
+        raise ValueError("hemi must be 'L' or 'R'")
+    if base_dir is not None:
         base_dir = Path(base_dir)
-
-    fn = f'fs_LR.{density}.{hemi}.{surf}.surf.gii'
-    surface_path = base_dir / fn
-
-    if not surface_path.exists():
-        raise FileNotFoundError(f"file not exist: {surface_path}")
-
-    if return_path:
-        return str(surface_path)
+        legacy = base_dir / f'fs_LR.{density}.{hemi}.{surf}.surf.gii'
+        if legacy.exists():
+            surface_path = legacy
+        elif not download:
+            raise FileNotFoundError(f"Surface is not cached: {legacy}")
+        else:
+            surface_path = None
     else:
-        gii_mesh = nib.load(str(surface_path))
-        return gii_mesh
+        surface_path = None
+    if surface_path is None:
+        from neuromaps.datasets import fetch_fslr as _fetch_fslr
+        cache = get_data_dir(base_dir) / 'neuromaps'
+        atlas = _fetch_fslr(
+            density=density, data_dir=str(cache),
+            verbose=verbose if download else 0,
+        )
+        key = {'very_inflated': 'veryinflated'}.get(surf, surf)
+        if key not in atlas:
+            raise ValueError(
+                f"Surface {surf!r} is unavailable for fsLR {density}; "
+                f"available: {sorted(atlas)}"
+            )
+        pair = atlas[key]
+        surface_path = Path(getattr(pair, hemi, pair[0 if hemi == 'L' else 1]))
+    return str(surface_path) if return_path else nib.load(str(surface_path))
 
 
-def fetch_Yerks(hemi='L', surf='inflated', base_dir=None,return_path = False):
-    if base_dir is None:
-        root_path = Path(__file__).parent
-        base_dir = root_path / 'surfaces' / 'MacaqueYerks19'
-    else:
-        base_dir = Path(base_dir)
+def fetch_Yerks(hemi='L', surf='inflated', base_dir=None, return_path=False,
+                url=None, sha256=None, download=True):
+    """Fetch one Yerkes19 surface from a user-declared official URL."""
+    data_root = get_data_dir(base_dir)
+    base_dir = data_root / 'Yerkes19'
 
     fn = f'MacaqueYerkes19.{hemi}.{surf}.32k_fs_LR.surf.gii'
     surface_path = base_dir / fn
 
     if not surface_path.exists():
-        raise FileNotFoundError(f"file not exist: {surface_path}")
+        if url is None or sha256 is None:
+            raise FileNotFoundError(
+                f"Surface is not cached: {surface_path}. Supply the provider's "
+                "direct url and sha256, or set HOMOLOMAP_DATA to an existing cache."
+            )
+        surface_path = fetch_resource(
+            'Yerkes19', url=url, sha256=sha256, filename=fn,
+            data_dir=data_root, download=download,
+        )
 
     if return_path:
         return str(surface_path)
@@ -225,7 +249,8 @@ def fetch_Yerks(hemi='L', surf='inflated', base_dir=None,return_path = False):
         return gii_mesh
 
 
-def fetch_parc(data_dir=None, hemi='L', key='FGC'):
+def fetch_parc(data_dir=None, hemi='L', key='FGC', url=None, sha256=None,
+               download=True):
 
     #如果key使到图谱的路径，则直接返回路径
     if os.path.exists(key):
@@ -233,8 +258,11 @@ def fetch_parc(data_dir=None, hemi='L', key='FGC'):
         return parc
 
     if data_dir is None:
-        root_path = Path(__file__).parent
-        data_dir = root_path / 'surfaces' / 'parcellations'
+        packaged = Path(__file__).parent / 'surfaces' / 'parcellations'
+        cached = get_data_dir() / f'parcellation-{key}'
+        data_dir = packaged if (packaged / f'{ATLAS.get(key, key)}.fs_LR_32k.{hemi}.label.gii').exists() else cached
+    else:
+        data_dir = Path(data_dir)
     
     # Retrieve the atlas name from ATLAS; if the key is not found, use the key itself as the fallback.
     atlas = ATLAS.get(key, key)
@@ -242,20 +270,26 @@ def fetch_parc(data_dir=None, hemi='L', key='FGC'):
     parc_path = data_dir / fn
 
     if not parc_path.exists():
-        raise FileNotFoundError(f"file not exist: {parc_path}")
+        if url is None or sha256 is None:
+            raise FileNotFoundError(
+                f"Parcellation is not cached: {parc_path}. Supply an official "
+                "direct url and sha256 to download it."
+            )
+        parc_path = fetch_resource(
+            f'parcellation-{key}', url=url, sha256=sha256, filename=fn,
+            data_dir=get_data_dir() if data_dir is None else Path(data_dir).parent,
+            download=download,
+        )
     
     parc = nib.load(str(parc_path))
     return parc
 
 
-def fetch_annot(data_dir=None, atlas='FGC',res='1mm', annot=True):
-    # root_path is used for the annotation dir below regardless of whether the
-    # caller supplied data_dir, so define it unconditionally.
-    root_path = Path(__file__).parent
-    if data_dir is None:
-        data_dir = root_path / 'volumes'
-    else:
-        data_dir = Path(data_dir)
+def fetch_annot(data_dir=None, atlas='FGC', res='1mm', annot=True,
+                volume_url=None, volume_sha256=None, annotation_url=None,
+                annotation_sha256=None, download=True):
+    data_root = get_data_dir(data_dir)
+    volume_dir = data_root / f'atlas-{atlas}-volumes'
 
     if atlas in ['D99','MacBN']:
         fn = f'{atlas}_NMT2asym.nii.gz'
@@ -264,14 +298,34 @@ def fetch_annot(data_dir=None, atlas='FGC',res='1mm', annot=True):
     else:
         raise ValueError(f"Unsupported atlas: {atlas}")
 
-    parc_path = data_dir / fn
+    parc_path = volume_dir / fn
+    if not parc_path.exists():
+        if volume_url is None or volume_sha256 is None:
+            raise FileNotFoundError(
+                f"Atlas volume is not cached: {parc_path}. Supply volume_url "
+                "and volume_sha256 from the atlas provider."
+            )
+        parc_path = fetch_resource(
+            f'atlas-{atlas}-volumes', url=volume_url, sha256=volume_sha256,
+            filename=fn, data_dir=data_root, download=download,
+        )
     parc = str(parc_path)
 
     if annot:
-        annot_dir = root_path / 'annotation'
-        if atlas == 'MacBN_human':
-            atlas = 'MacBN'
-        annot_path = annot_dir / f'{atlas}_annot.csv'
+        annotation_atlas = 'MacBN' if atlas == 'MacBN_human' else atlas
+        annot_dir = data_root / f'atlas-{annotation_atlas}-annotation'
+        annot_path = annot_dir / f'{annotation_atlas}_annot.csv'
+        if not annot_path.exists():
+            if annotation_url is None or annotation_sha256 is None:
+                raise FileNotFoundError(
+                    f"Atlas annotation is not cached: {annot_path}. Supply "
+                    "annotation_url and annotation_sha256."
+                )
+            annot_path = fetch_resource(
+                f'atlas-{annotation_atlas}-annotation', url=annotation_url,
+                sha256=annotation_sha256, filename=annot_path.name,
+                data_dir=data_root, download=download,
+            )
         annot = pd.read_csv(str(annot_path),index_col=0)
         return parc, annot
     else:

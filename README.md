@@ -47,6 +47,40 @@ python -m pip install -e ".[all]"
 
 Python 3.9 or newer is required.
 
+## Third-party atlas resources
+
+HomoloMap's D99/BN cell-type maps and homology table are installed with the
+package. Larger third-party atlas resources are fetched only when requested and
+are stored outside the source tree. By default HomoloMap uses the operating
+system's user cache; set `HOMOLOMAP_DATA` or pass `data_dir=` to use a project
+data directory.
+
+```python
+from HomoloMap.datasets import fetch_fslr, fetch_resource
+
+# neuromaps manages the official fsLR download and cache
+sphere = fetch_fslr(surf="sphere", hemi="L", return_path=True)
+
+# Other provider files require an explicit URL and published checksum
+atlas_file = fetch_resource(
+    "provider-atlas-v1",
+    url="https://provider.example.org/atlas-v1.nii.gz",
+    sha256="<provider-or-release-SHA256>",
+    data_dir="./data",       # optional
+    download=True,
+)
+```
+
+Downloads are written atomically and accepted only when their SHA256 matches.
+Use `download=False` for a strictly offline run. HomoloMap does not silently
+mirror or redistribute third-party atlas files; users should cite and follow
+the terms of the original provider. fsLR retrieval follows the
+[`neuromaps.datasets.fetch_fslr`](https://netneurolab.github.io/neuromaps/generated/neuromaps.datasets.fetch_fslr.html)
+interface. Brainnetome and D99 resources should be obtained from their
+[official Brainnetome resource page](https://www.brainnetome.org/resource/) and
+[official AFNI D99 distribution](https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/nonhuman/macaque_tempatl/atlas_d99v2.html),
+respectively.
+
 ## Tutorial
 
 The documentation is split into short, task-oriented notebooks:

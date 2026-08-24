@@ -17,5 +17,10 @@ verify execution and have no scientific interpretation.
 The notebooks use 100 rotations for speed. Use at least 1,000 rotations and a
 predefined multiple-testing plan for scientific analyses.
 
+The spin tutorial may fetch an fsLR sphere through `neuromaps` on first use.
+Set `HOMOLOMAP_DATA` to control the shared cache location. Later runs reuse the
+cached file; for offline execution, pre-populate the cache or pass a local
+surface directory to the loader.
+
 Every notebook ends with a compact visualization generated from the current
 inputs. Replacing the toy IDPs therefore updates the figures automatically.
