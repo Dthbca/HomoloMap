@@ -29,19 +29,36 @@ def prepare_layer_analysis(atlas='BN', mapping_column='subclass',
                            mask_threshold=0.05, composition='clr',
                            thickness_relative=True, unmapped='drop',
                            normalization='within_layer', zero_policy='nan',
-                           zero_method='multiplicative', invalid_rows='drop'):
+                           zero_method='multiplicative', invalid_rows='drop',
+                           normalization_order='before_relabel', reclose=True):
     """Prepare aligned laminar cell-type maps and BigBrain thickness."""
     from HomoloMap.datasets import (
         load_layer_counts, relabel_layer_counts, normalize_layer_composition,
         fetch_bigbrain_layer_thickness, fetch_laminar_mask)
     from HomoloMap.transforms import make_layer_subcompositions
+    if normalization_order not in {'before_relabel', 'after_relabel'}:
+        raise ValueError(
+            "normalization_order must be 'before_relabel' or 'after_relabel'"
+        )
+    normalization_mode = (
+        'within_region' if normalization == 'within_region_cross_layer'
+        else normalization
+    )
     raw, mapping = load_layer_counts(
         data_dir=data_dir, mapping_column=mapping_column,
         unmapped=unmapped, return_mapping=True)
+    ratio_input = (
+        normalize_layer_composition(
+            raw, mode=normalization_mode, zero_policy=zero_policy)
+        if normalization_order == 'before_relabel' else raw
+    )
+    proportions, ratio_relabel_audit = relabel_layer_counts(
+        ratio_input, target_atlas=atlas, method='mean', return_audit=True)
     counts, relabel_audit = relabel_layer_counts(
-        raw, target_atlas=atlas, return_audit=True)
-    proportions = normalize_layer_composition(
-        counts, mode=normalization, zero_policy=zero_policy)
+        raw, target_atlas=atlas, method='sum', return_audit=True)
+    if normalization_order == 'after_relabel' or reclose:
+        proportions = normalize_layer_composition(
+            proportions, mode=normalization_mode, zero_policy=zero_policy)
     cell_types = next(iter(proportions.values())).columns
     present_mask, mask_audit = fetch_laminar_mask(
         kind=mask_kind, cell_types=cell_types, threshold=mask_threshold,
@@ -54,9 +71,12 @@ def prepare_layer_analysis(atlas='BN', mapping_column='subclass',
         atlas=atlas, data_dir=data_dir, relative=thickness_relative,
         regions=regions)
     metadata = {'atlas': atlas, 'normalization': normalization,
+                'normalization_order': normalization_order,
+                'reclosed_after_relabel': bool(reclose),
                 'zero_policy': zero_policy, 'invalid_rows': invalid_rows,
                 'composition': composition, 'thickness_relative': thickness_relative,
                 'mask': mask_audit, 'relabel': relabel_audit,
+                'ratio_relabel': ratio_relabel_audit,
                 'composition_by_layer': composition_audit}
     return LayerAnalysisData(features, counts, thickness, present_mask, mapping, metadata)
 
@@ -69,7 +89,8 @@ def run_layer_analysis(atlas='BN', mapping_column='subclass', data_dir=None,
                        spin_method='Alexander-Bloch', metric='pearsonr',
                        correction='fdr_bh', permutation_scheme='mismatch',
                        n_permutations=None, random_state=42, n_jobs=1,
-                       exclude_layers=None):
+                       exclude_layers=None,
+                       normalization_order='before_relabel', reclose=True):
     """One-stop laminar spatial-coupling and layer-specificity analysis."""
     from HomoloMap.stats import (SpinTest, filter_layer_inputs,
                                  layer_spin_correlation, layer_match_permutation)
@@ -78,7 +99,8 @@ def run_layer_analysis(atlas='BN', mapping_column='subclass', data_dir=None,
         mask_kind=mask_kind, mask_threshold=mask_threshold,
         composition=composition, thickness_relative=thickness_relative,
         unmapped=unmapped, normalization=normalization,
-        zero_policy=zero_policy, invalid_rows=invalid_rows)
+        zero_policy=zero_policy, invalid_rows=invalid_rows,
+        normalization_order=normalization_order, reclose=reclose)
     features, thickness, present_mask = filter_layer_inputs(
         prepared.proportions, prepared.thickness, prepared.present_mask,
         exclude_layers=exclude_layers)
@@ -189,7 +211,10 @@ def _standardize_analysis_array(values, name):
 def prepare_analysis_data(data=None, feature_type='ratio', ctype_level='subclass',
                           layer=False, mask=True, smooth=None, atlas='BN',
                           mapping_column=None, unmapped='drop', renormalize=False,
-                          return_mapping=False):
+                          return_mapping=False, layer_data_dir=None,
+                          layer_normalization='within_layer',
+                          layer_normalization_order='before_relabel',
+                          layer_reclose=True):
     """Load, left-hemisphere filter, reparcellate, and align analysis tables."""
     from HomoloMap.datasets import (
         fetch_enigma, fetch_ctype_ratio, fetch_layer_ratio, fetch_ctype_density
@@ -203,7 +228,11 @@ def prepare_analysis_data(data=None, feature_type='ratio', ctype_level='subclass
     if layer:
         predictors, mapping = fetch_layer_ratio(
             level=ctype_level, mask=mask, mapping_column=mapping_column,
-            unmapped=unmapped, return_mapping=True)
+            unmapped=unmapped, return_mapping=True,
+            data_dir=layer_data_dir, target_atlas=atlas,
+            normalization=layer_normalization,
+            normalization_order=layer_normalization_order,
+            reclose=layer_reclose)
         predictors = predictors.fillna(0)
     elif feature_type == 'ratio':
         predictors, mapping = fetch_ctype_ratio(

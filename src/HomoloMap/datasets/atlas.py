@@ -135,43 +135,10 @@ def fetch_ctype_density(level='subclass', smooth=None, mapping_column=None,
     )
 
 
-def fetch_layer_ratio(level='subclass', donor='M1', mask=True, mapping_column=None,
-                      unmapped='drop', return_mapping=False):
-    root_path = Path(__file__).parent
-    layers = ['l1','l2','l3','l4','l5','l6']
-
-    if level not in ['subclass','cluster']:
-        raise ValueError(
-            f"level must be 'subclass' or 'cluster', got {level!r}"
-        )
-
-    layer_data_list, audits = [], []
-    for layer in layers:
-        path = os.path.join(root_path,'features/SpatialTranscriptomics/layer_data',f'ctype_region_counts_FGC_{donor}_{layer}.csv')
-        layer_data = pd.read_csv(path,index_col=0)
-        layer_data, audit = ctype_ratio_agg(
-            layer_data, key=mapping_column or level, unmapped=unmapped,
-            return_mapping=True)
-        audits.append(audit)
-        # pandas.concat compares attrs for equality; audit contains Series,
-        # whose elementwise equality has no scalar truth value. The audit is
-        # retained separately and restored on the concatenated result below.
-        layer_data.attrs = {}
-        layer_data_list.append(layer_data)
-    layers_data = pd.concat(layer_data_list,axis=1,keys=layers)
-
-    if mask:
-        layer_mask =pd.read_csv(os.path.join(root_path,'features/SpatialTranscriptomics/mask_by_nc2025.csv'),index_col=0)
-        for ctype in layer_mask.index:
-            for layer in layers:
-                if not layer_mask.loc[ctype,layer]:
-                    layers_data.loc[:,(layer,ctype)] = 0
-    
-    layer_ctype_ratio = layers_data.div(layers_data.sum(axis=1),axis=0)
-    audit = dict(audits[0])
-    audit['layers'] = layers
-    layer_ctype_ratio.attrs['celltype_mapping'] = audit
-    return (layer_ctype_ratio, audit) if return_mapping else layer_ctype_ratio
+def fetch_layer_ratio(*args, **kwargs):
+    """Compatibility wrapper for :func:`HomoloMap.datasets.layers.fetch_layer_ratio`."""
+    from .layers import fetch_layer_ratio as _fetch_layer_ratio
+    return _fetch_layer_ratio(*args, **kwargs)
 
 
 def fetch_enigma(atlas='DK'):

@@ -119,6 +119,149 @@ def normalize_layer_composition(layer_counts, mode='within_layer',
     return output
 
 
+def _composition_closure_error(layer_data, mode):
+    """Return the maximum closure error for a named laminar denominator."""
+    if mode == 'within_layer':
+        sums = pd.concat(
+            {layer: frame.sum(axis=1) for layer, frame in layer_data.items()},
+            axis=1,
+        )
+    elif mode == 'within_region':
+        sums = sum(layer_data.values())
+    elif mode == 'joint_all_layers_all_celltypes':
+        sums = sum(frame.sum(axis=1) for frame in layer_data.values()).to_frame()
+    else:
+        raise ValueError(f"Unsupported normalization mode {mode!r}")
+    values = sums.to_numpy(dtype=float)
+    finite = np.isfinite(values)
+    positive = finite & (values > 0)
+    return float(np.max(np.abs(values[positive] - 1.0))) if positive.any() else 0.0
+
+
+def fetch_layer_ratio(
+    level='subclass', donor='M1', data_dir=None, source_atlas='D99',
+    target_atlas='BN', normalization='within_layer',
+    normalization_order='before_relabel', reclose=True, mask=None,
+    mask_threshold=0.05, mapping_column=None, unmapped='drop', map_df=None,
+    relabel_method='mean', cross_species=True, unknown_labels='drop',
+    zero_policy='zero', return_mapping=False, as_dict=False,
+):
+    """Build mapped laminar cell-type proportions from raw D99 counts.
+
+    The primary workflow normalizes the source D99 counts, relabels each layer
+    into the requested atlas, and then repeats the same closure operation to
+    remove numerical or coverage-induced loss introduced by relabeling.
+
+    Parameters
+    ----------
+    normalization : {'within_layer', 'within_region_cross_layer',
+                     'joint_all_layers_all_celltypes'}
+        Denominator used to define a laminar proportion. ``within_layer``
+        closes cell types within each ROI and layer. ``within_region_cross_layer``
+        closes each cell type across the six layers within an ROI. ``joint``
+        closes all layer-by-cell-type parts together.
+    normalization_order : {'before_relabel', 'after_relabel'}
+        The primary analysis uses ``before_relabel``. The alternative is
+        retained for explicit sensitivity analyses.
+    reclose : bool, default=True
+        Reapply the named closure after spatial relabeling.
+    mask : {None, False, True, 'external', 'enrichment'}
+        Optional structural cell-type-by-layer mask. ``True`` means the
+        externally supplied mask. Masking occurs before the final closure.
+    as_dict : bool, default=False
+        Return one DataFrame per layer. Otherwise return a wide DataFrame with
+        ``(layer, cell_type)`` MultiIndex columns.
+
+    Notes
+    -----
+    ``data_dir`` must point to the layer dataset root containing
+    ``Spatial/raw_counts_d99.npy``. Third-party raw laminar measurements are
+    not bundled with the public wheel.
+    """
+    if donor != 'M1':
+        raise ValueError("The released layer workflow currently supports donor='M1'")
+    aliases = {
+        'within_region_cross_layer': 'within_region',
+        'joint': 'joint_all_layers_all_celltypes',
+    }
+    mode = aliases.get(normalization, normalization)
+    valid_modes = {
+        'within_layer', 'within_region', 'joint_all_layers_all_celltypes'
+    }
+    if mode not in valid_modes:
+        raise ValueError(
+            "normalization must be 'within_layer', "
+            "'within_region_cross_layer', or "
+            "'joint_all_layers_all_celltypes'"
+        )
+    if normalization_order not in {'before_relabel', 'after_relabel'}:
+        raise ValueError(
+            "normalization_order must be 'before_relabel' or 'after_relabel'"
+        )
+
+    raw, mapping_audit = load_layer_counts(
+        data_dir=data_dir, source_atlas=source_atlas,
+        mapping_column=mapping_column or level, unmapped=unmapped,
+        map_df=map_df, return_mapping=True,
+    )
+    relabel_input = (
+        normalize_layer_composition(raw, mode=mode, zero_policy=zero_policy)
+        if normalization_order == 'before_relabel' else raw
+    )
+    relabeled, relabel_audit = relabel_layer_counts(
+        relabel_input, source_atlas=source_atlas, target_atlas=target_atlas,
+        method=relabel_method, cross_species=cross_species,
+        unknown_labels=unknown_labels, return_audit=True,
+    )
+    proportions = (
+        normalize_layer_composition(relabeled, mode=mode, zero_policy=zero_policy)
+        if normalization_order == 'after_relabel' else relabeled
+    )
+
+    mask_audit = None
+    if mask not in {None, False}:
+        kind = 'external' if mask is True else str(mask)
+        present_mask, mask_audit = fetch_laminar_mask(
+            kind=kind,
+            cell_types=next(iter(proportions.values())).columns,
+            threshold=mask_threshold, counts=relabeled, data_dir=data_dir,
+        )
+        aliases_by_layer = dict(zip(LAYER_KEYS, LAYER_LABELS))
+        for layer, frame in proportions.items():
+            keep = present_mask.loc[aliases_by_layer[layer]].reindex(
+                frame.columns, fill_value=False)
+            frame.loc[:, ~keep] = 0.0
+
+    if reclose:
+        proportions = normalize_layer_composition(
+            proportions, mode=mode, zero_policy=zero_policy)
+    closure_error = _composition_closure_error(proportions, mode)
+    audit = dict(mapping_audit)
+    audit.update({
+        'source_atlas': source_atlas,
+        'target_atlas': target_atlas,
+        'normalization': normalization,
+        'normalization_order': normalization_order,
+        'reclosed_after_relabel': bool(reclose),
+        'relabel': relabel_audit,
+        'mask': mask_audit,
+        'max_abs_closure_error': closure_error,
+    })
+    if as_dict:
+        result = proportions
+        for frame in result.values():
+            frame.attrs['layer_mapping'] = audit
+    else:
+        clean = {}
+        for layer, frame in proportions.items():
+            frame = frame.copy()
+            frame.attrs = {}
+            clean[layer] = frame
+        result = pd.concat(clean, axis=1)
+        result.attrs['layer_mapping'] = audit
+    return (result, audit) if return_mapping else result
+
+
 def mask_and_close_joint_composition(layer_counts, present_mask,
                                      zero_policy='zero', atol=1e-10):
     """Apply a structural layer mask, then close all retained parts per ROI.

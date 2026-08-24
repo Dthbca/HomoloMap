@@ -104,6 +104,32 @@ The usual external input is a `pandas.DataFrame` containing brain IDPs:
 
 Cell-type ratios or densities are **not** the usual external input to the analysis workflow. They are predictors supplied by HomoloMap. You may nevertheless load the released cell-type tables directly for a custom analysis.
 
+### Optional laminar workflow
+
+Laminar analyses additionally require the source dataset containing
+`Spatial/raw_counts_d99.npy`; these third-party raw measurements are not
+redistributed in the wheel. The primary feature definition normalizes in D99,
+relabels each layer, and then re-closes the composition in the target atlas:
+
+```python
+from HomoloMap.datasets import fetch_layer_ratio
+
+layer_ratio, audit = fetch_layer_ratio(
+    data_dir="/path/to/BigBrainLayer/dataset",
+    target_atlas="BN",
+    level="subclass",
+    normalization="within_region_cross_layer",
+    normalization_order="before_relabel",
+    reclose=True,
+    mask="external",
+    return_mapping=True,
+)
+```
+
+Use `normalization="within_layer"` when the question concerns cell-type
+composition inside each layer. The returned audit records mapping coverage,
+spatially dropped labels, the denominator, masking, and post-relabel closure.
+
 ## Repository layout
 
 - `src/HomoloMap/datasets`: dataset loaders and mapping utilities.
