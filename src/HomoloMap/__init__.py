@@ -19,19 +19,17 @@ Main Features
 
 Quick Start
 -----------
->>> from HomoloMap import datasets, stats, plotting
+>>> import pandas as pd
+>>> from HomoloMap.utils import run_analysis
 >>> 
->>> # Load cell type ratios and phenotype data
->>> celltype_data = datasets.fetch_ctype_ratio(level='subclass', smooth=True)
->>> phenotype_data = datasets.fetch_enigma(atlas='FGC')
->>> 
->>> # Generate spatial null model
->>> spins = stats.gen_spinsamples(celltype_data, atlas='FGC', n_rotate=1000)
->>> 
->>> # Compute correlations
->>> spinner = stats.SpinTest(atlas='FGC', n_spins=1000)
->>> r, p = spinner.correlation(celltype_data['L2/3_IT'], phenotype_data['asd'])
->>> print(f"r = {r:.3f}, p = {p:.3f}")
+>>> # The external input is a region-by-IDP table indexed by atlas labels.
+>>> idps = pd.read_csv('brain_idps_bn.csv', index_col=0)
+>>> idps.index = idps.index.astype(int)
+>>> result = run_analysis(
+...     data=idps, atlas='BN', feature_type='ratio',
+...     ctype_level='subclass', n_spins=1000,
+...     cumulative=True, explanations='shap', random_state=42,
+... )
 
 Modules
 -------

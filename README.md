@@ -1,6 +1,6 @@
 # HomoloMap
 
-HomoloMap is a Python toolkit for relating spatial cell-type maps to human brain imaging phenotypes in a common atlas space. It combines atlas relabeling, compositional transformations, spatially constrained null models, multivariable contribution analysis, and publication-oriented visualization.
+HomoloMap is a Python toolkit for explaining regional brain imaging-derived phenotypes (IDPs) with spatial cell-type maps in a common atlas space. The main user-provided input is one or more brain IDP maps. HomoloMap supplies the cell-type reference maps and tools for atlas alignment, spatially constrained inference, multivariable contribution analysis, and visualization.
 
 The package was developed for analyses in which cell types measured in one biological reference are harmonized by transcriptomic homology and then evaluated against regional human neuroimaging maps. HomoloMap does not assume that homologous labels imply identical abundance or molecular state across species; mapping coverage and unresolved features should always be reported.
 
@@ -44,48 +44,126 @@ python -m pip install -e ".[all]"
 
 Python 3.9 or newer is required.
 
-## Quick example: compositional transformation
+## What you provide
+
+The usual external input is a `pandas.DataFrame` containing brain IDPs:
+
+- rows: atlas regions;
+- columns: IDPs, such as cortical thickness effects, functional measures, MEG frequency maps, or other regional imaging phenotypes;
+- index: numeric region labels matching the selected atlas;
+- values: one regional value per IDP (missing values are allowed only where the chosen analysis supports them).
+
+Cell-type ratios or densities are **not** the usual external input to the analysis workflow. They are predictors supplied by HomoloMap. You may nevertheless load the released cell-type tables directly for a custom analysis.
+
+## Tutorial: relate brain IDPs to cell-type maps
+
+### 1. Prepare an IDP table
 
 ```python
 import pandas as pd
-from HomoloMap.transforms import transform_composition
 
-ratios = pd.DataFrame(
-    {
-        "Excitatory": [0.60, 0.45, 0.30],
-        "Inhibitory": [0.25, 0.35, 0.40],
-        "Non-neuronal": [0.15, 0.20, 0.30],
-    },
-    index=["ROI-1", "ROI-2", "ROI-3"],
-)
-
-clr = transform_composition(
-    ratios,
-    method="clr",
-    zero_method="multiplicative",
-)
-print(clr)
+# CSV layout:
+# region,myelin_IDP,MEG_alpha_IDP
+# 1,0.42,-0.18
+# 3,0.37,-0.11
+# ...
+idps = pd.read_csv("brain_idps_bn.csv", index_col=0)
+idps.index = idps.index.astype(int)
 ```
 
-## Typical imaging workflow
+The example uses Brainnetome (BN) labels. The distributed BN maps contain 105 cortical regions with labels `1, 3, ..., 209`, so the IDP table should use the same labels or a subset of them.
+
+### 2. Inspect and align the supplied cell-type map
 
 ```python
-from HomoloMap.utils import prepare_analysis_data, run_analysis
+from pathlib import Path
+import pandas as pd
 
-# Data can be supplied as a DataFrame or CSV path. Mapping policy,
-# compositional transform, atlas alignment, and coverage thresholds
-# should be specified explicitly for a reproducible analysis.
-prepared = prepare_analysis_data(
-    data="celltype_ratio.csv",
+celltypes = pd.read_csv(
+    Path("data/maps/BN/ctype_ratio_BN_23_subclass.csv"),
+    index_col=0,
+)
+celltypes.index = celltypes.index.astype(int)
+
+shared = celltypes.index.intersection(idps.index, sort=False)
+X = celltypes.loc[shared]
+Y = idps.loc[shared]
+
+print(f"Using {len(shared)} shared BN regions")
+print(f"Predictors: {X.shape[1]} cell-type subclasses")
+print(f"Outcomes: {Y.shape[1]} brain IDPs")
+```
+
+Use `ctype_ratio_BN_71_cluster.csv` instead when finer cluster-level interpretation is required. Subclass and cluster analyses should be reported as distinct feature resolutions, not pooled into one multiple-testing family.
+
+### 3. Run the standard analysis workflow
+
+For package-managed cell-type predictors, pass the external IDP table through `data`:
+
+```python
+from HomoloMap.utils import run_analysis
+
+result = run_analysis(
+    data=idps,                 # external outcomes, not cell-type data
+    atlas="BN",
     feature_type="ratio",
     ctype_level="subclass",
-    composition="clr",
+    n_spins=1000,
+    metric="pearsonr",
+    cumulative=True,
+    mode="linear",
+    explanations="shap",     # or "dominance" for linear models
     unmapped="drop",
-    min_mapping_coverage=0.95,
+    renormalize=True,
+    random_state=42,
+)
+
+spin_results = result["correlation"]
+total_model = result["cumulative_effects"]
+celltype_explanations = result["explanations"]
+```
+
+The outputs answer complementary questions:
+
+- `correlation`: which individual cell-type maps are spatially associated with each IDP, using spin-based nulls and adjusted p-values;
+- `cumulative_effects`: how much spatial variation in each IDP is explained jointly by all selected cell-type predictors, with spatial permutation inference;
+- `explanations`: how the fitted multivariable model distributes contribution across individual cell types (SHAP) or predictors (dominance analysis).
+
+### 4. CLR sensitivity analysis for ratio maps
+
+Raw mapped ratios are the primary interpretable representation. Because ratios are compositional, repeat the analysis with a centered log-ratio (CLR) transform as a sensitivity analysis:
+
+```python
+clr_result = run_analysis(
+    data=idps,
+    atlas="BN",
+    feature_type="ratio",
+    ctype_level="subclass",
+    n_spins=1000,
+    cumulative=True,
+    explanations="shap",
+    renormalize=True,
+    correlation_transform="clr",
+    cumulative_transform="clr",
+    explanation_transform="clr",
+    zero_method="multiplicative",
+    random_state=42,
 )
 ```
 
-See the docstrings in `HomoloMap.datasets`, `HomoloMap.transforms`, `HomoloMap.stats`, and `HomoloMap.utils` for the current API. The package is in alpha development; validate results and record package version, atlas, mapping table, null model, and random seed in every analysis.
+CLR coefficients and SHAP values describe log-ratio contrasts, so they should not be interpreted as absolute abundance effects. CLR is not appropriate for density features unless those values have first been given a defensible compositional meaning.
+
+### 5. Reproducibility checks
+
+Before interpreting results, verify that:
+
+1. the IDP and cell-type tables use the same atlas and label convention;
+2. the number and identity of shared regions are recorded;
+3. mapping coverage and unresolved source cell types are reported;
+4. each stated multiple-testing family is corrected separately;
+5. atlas, hemisphere, spin method, number of rotations, random seed, feature resolution, and compositional transform are saved with the results.
+
+See the docstrings in `HomoloMap.datasets`, `HomoloMap.transforms`, `HomoloMap.stats`, and `HomoloMap.utils` for the current API. The package is in alpha development; validate results before scientific interpretation.
 
 ## Repository layout
 
@@ -93,11 +171,11 @@ See the docstrings in `HomoloMap.datasets`, `HomoloMap.transforms`, `HomoloMap.s
 - `src/HomoloMap/transforms`: atlas, geometry, smoothing, and composition transforms.
 - `src/HomoloMap/stats`: spatial nulls, model analysis, and laminar statistics.
 - `src/HomoloMap/plotting.py`: surface and statistical visualization.
-- `examples`: small runnable examples using synthetic data.
+- `examples`: small examples for loading released maps and preparing external IDPs.
 - `tests`: lightweight package tests.
 - `data`: original D99 maps, HomoloMap-derived BN maps, mapping table, and provenance audits.
 
-Only small support surfaces and parcellation resources required by the package are bundled. Project-specific raw spatial-transcriptomic and neuroimaging datasets are not included.
+The repository includes released D99 and BN cell-type maps. Project-specific brain IDPs are not included and are expected to be supplied by the user.
 
 ## Statistical interpretation
 
