@@ -1,6 +1,8 @@
 """Generate deterministic visual previews shown on GitHub tutorial pages."""
 
 from pathlib import Path
+import os
+import sys
 
 import matplotlib as mpl
 mpl.use("Agg")
@@ -17,6 +19,7 @@ from sklearn.preprocessing import StandardScaler
 ROOT = Path(__file__).parents[1]
 OUT = ROOT / "tutorials" / "figures"
 OUT.mkdir(parents=True, exist_ok=True)
+sys.path.insert(0, str(ROOT / "src"))
 X = pd.read_csv(ROOT / "data/maps/BN/ctype_ratio_BN_23_subclass.csv", index_col=0)
 X.index = X.index.astype(int)
 rng = np.random.default_rng(42)
@@ -47,18 +50,24 @@ def save(fig, name):
     plt.close(fig)
 
 
-# 1: alignment and composition QC
-fig, axes = plt.subplots(2, 1, figsize=(7.2, 4.4), gridspec_kw={"height_ratios": [3, 1]})
-image = axes[0].imshow(X.T, aspect="auto", cmap="viridis", interpolation="none")
-axes[0].set(ylabel="Cell-type subclass", title="Aligned BN cell-type composition")
-axes[0].set_xticks([])
-fig.colorbar(image, ax=axes[0], label="Mapped proportion", fraction=0.025, pad=0.02)
-for column, color in zip(Y, ["#2f6690", "#d17b49"]):
-    axes[1].plot(Y.index, Y[column], label=column, color=color, linewidth=1.2)
-axes[1].set(xlabel="BN region label", ylabel="IDP value")
-axes[1].legend(frameon=False, ncol=2, loc="upper center", bbox_to_anchor=(0.5, -0.35))
-fig.tight_layout()
-save(fig, "01_prepare_brain_idps.png")
+# 1: surface previews; the two inputs occupy the same BN regional space.
+if os.name == "nt":
+    os.environ.setdefault("VTK_DEFAULT_OPENGL_WINDOW", "vtkWin32OpenGLRenderWindow")
+from HomoloMap.plotting import plot_left
+
+surface_specs = [
+    (Y.iloc[:, 0], "Example brain IDP", "coolwarm", "IDP value",
+     "01_brain_idp_surface.png"),
+    (X["Sst"], "Example Sst cell map", "YlOrRd", "Mapped proportion",
+     "01_cell_map_surface.png"),
+]
+for values, title, cmap, label, filename in surface_specs:
+    fig = plot_left(
+        values, atlas="BN", surf="inflated", view="row", cmap=cmap,
+        cbar_label=label, title=title, title_fontsize=11,
+        figsize=(7.2, 2.5), render_scale=(2, 2),
+    )
+    save(fig, filename)
 
 
 # 2: ranked association overview (the notebook adds spin-derived p-values)
@@ -108,4 +117,4 @@ ax.set(xlabel="Ratio-map correlation", ylabel="CLR correlation",
 fig.tight_layout()
 save(fig, "04_clr_sensitivity.png")
 
-print(f"PASS figures=4 output={OUT}")
+print(f"PASS figures=5 output={OUT}")

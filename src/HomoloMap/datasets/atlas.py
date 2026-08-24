@@ -193,7 +193,11 @@ def fetch_fslr(density='32k', hemi='L', surf='inflated', base_dir=None,
     hemi = hemi.upper()
     if hemi not in {'L', 'R'}:
         raise ValueError("hemi must be 'L' or 'R'")
-    if base_dir is not None:
+    if base_dir is None:
+        packaged = Path(__file__).parent / 'surfaces' / 'fslr_32k'
+        legacy = packaged / f'fs_LR.{density}.{hemi}.{surf}.surf.gii'
+        surface_path = legacy if legacy.exists() else None
+    else:
         base_dir = Path(base_dir)
         legacy = base_dir / f'fs_LR.{density}.{hemi}.{surf}.surf.gii'
         if legacy.exists():
@@ -202,8 +206,6 @@ def fetch_fslr(density='32k', hemi='L', surf='inflated', base_dir=None,
             raise FileNotFoundError(f"Surface is not cached: {legacy}")
         else:
             surface_path = None
-    else:
-        surface_path = None
     if surface_path is None:
         from neuromaps.datasets import fetch_fslr as _fetch_fslr
         cache = get_data_dir(base_dir) / 'neuromaps'
