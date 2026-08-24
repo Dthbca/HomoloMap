@@ -207,11 +207,21 @@ def fetch_fslr(density='32k', hemi='L', surf='inflated', base_dir=None,
         else:
             surface_path = None
     if surface_path is None:
+        if not download:
+            location = (
+                Path(base_dir) if base_dir is not None
+                else Path(__file__).parent / 'surfaces' / 'fslr_32k'
+            )
+            raise FileNotFoundError(
+                f"Surface is not available offline in {location}. "
+                "Set download=True once to populate the neuromaps cache, or "
+                "pass base_dir containing the requested surface."
+            )
         from neuromaps.datasets import fetch_fslr as _fetch_fslr
         cache = get_data_dir(base_dir) / 'neuromaps'
         atlas = _fetch_fslr(
             density=density, data_dir=str(cache),
-            verbose=verbose if download else 0,
+            verbose=verbose,
         )
         key = {'very_inflated': 'veryinflated'}.get(surf, surf)
         if key not in atlas:

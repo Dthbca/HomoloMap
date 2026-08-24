@@ -3,6 +3,12 @@
 The tutorials are short and task-oriented. Run them in order for a complete
 workflow, or open the notebook matching the analysis you need.
 
+Install the surface-plotting dependency before running the brain-map cells:
+
+```bash
+python -m pip install -e ".[surface]"
+```
+
 | Tutorial | Question | Main output |
 |---|---|---|
 | [`01_prepare_brain_idps.ipynb`](01_prepare_brain_idps.ipynb) | How should external brain IDPs be formatted and aligned? | aligned tables, composition heatmap, and IDP quality-control profiles |

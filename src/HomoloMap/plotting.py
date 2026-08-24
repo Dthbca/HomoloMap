@@ -17,6 +17,7 @@ import seaborn as sns
 from scipy.stats import pearsonr, spearmanr, zscore
 from typing import Optional, Tuple, List, Union, Dict
 import warnings
+import platform
 
 try:
     from surfplot import Plot
@@ -86,6 +87,7 @@ def set_style(dpi: int = 300):
 
 def plot_left(
     data: np.ndarray,
+    data_labels: Optional[np.ndarray] = None,
     species: str = 'human',
     atlas: str = 'FGC',
     surf: str = 'inflated',
@@ -112,8 +114,12 @@ def plot_left(
     
     Parameters
     ----------
-    data : np.ndarray
-        Vertex data to visualize
+    data : array-like or pandas.Series
+        Vertex values or one value per atlas region. A Series should use atlas
+        labels as its index.
+    data_labels : array-like, optional
+        Atlas label for each row of NumPy regional input. Required for atlases
+        with non-consecutive labels, including the released BN maps.
     species : str, default='human'
         Species ('human' or 'macaque')
     atlas : str, default='FGC'
@@ -176,8 +182,12 @@ def plot_left(
     ... )
     """
     import os
-    if not 'VTK_DEFAULT_OPENGL_WINDOW' in os.environ:
-        os.environ['VTK_DEFAULT_OPENGL_WINDOW']='vtkOSOpenGLRenderWindow'
+    if 'VTK_DEFAULT_OPENGL_WINDOW' not in os.environ:
+        os.environ['VTK_DEFAULT_OPENGL_WINDOW'] = (
+            'vtkWin32OpenGLRenderWindow'
+            if platform.system() == 'Windows'
+            else 'vtkOSOpenGLRenderWindow'
+        )
 
     from HomoloMap.datasets import fetch_fslr, fetch_Yerks, fetch_parc
     import nibabel as nib
@@ -205,11 +215,15 @@ def plot_left(
         color_range = (vmin, vmax)
     if data.shape[0] != n_vertices:
         try:
-            data = parc2vertex(data, atlas=atlas)
+            data = parc2vertex(data, atlas=atlas, data_labels=data_labels)
             if data.shape[0] != n_vertices:
                 raise ValueError("Data length does not match number of vertices in the surface mesh.")
-        except:
-            raise ValueError("Data length does not match number of vertices in the surface mesh.")
+        except Exception as exc:
+            raise ValueError(
+                "Data cannot be aligned to the selected surface. Pass a "
+                "pandas Series indexed by atlas label, or provide data_labels "
+                "for NumPy regional input."
+            ) from exc
     p.add_layer({'left': data}, cmap=cmap, color_range=color_range, cbar_label=cbar_label)
     if outline:
         p.add_layer({'left': fetch_parc(key=atlas).darrays[0].data}, cmap='gray',alpha=.5, as_outline=True, cbar=False)
