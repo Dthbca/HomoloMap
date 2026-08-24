@@ -56,7 +56,7 @@ The documentation is split into short, task-oriented notebooks:
 3. [`Total contribution and SHAP`](tutorials/03_total_contribution_and_shap.ipynb): joint model performance and optional feature attribution.
 4. [`CLR sensitivity`](tutorials/04_clr_sensitivity.ipynb): comparison of mapped ratios with a centered log-ratio representation.
 
-See the [`tutorial index`](tutorials/README.md) for prerequisites, expected outputs, and recommended execution order. Each notebook is focused on one analytical question and can be opened independently. Deterministic toy IDPs are provided only to check execution; replace them with your own BN-indexed brain maps for scientific analysis.
+See the [`tutorial index`](tutorials/README.md) for prerequisites, expected outputs, recommended execution order, and the visual summary produced by each notebook. Each notebook is focused on one analytical question and can be opened independently. Deterministic toy IDPs are provided only to check execution; replace them with your own BN-indexed brain maps for scientific analysis.
 
 ## What you provide
 
@@ -79,6 +79,7 @@ Cell-type ratios or densities are **not** the usual external input to the analys
 - `examples`: small examples for loading released maps and preparing external IDPs.
 - `tests`: lightweight package tests.
 - `data`: original D99 maps, HomoloMap-derived BN maps, mapping table, and provenance audits.
+- `src/HomoloMap/datasets`: installation-ready annotations, surfaces, atlas volumes, and the canonical D99/BN resources used by the loaders.
 
 The repository includes released D99 and BN cell-type maps. Project-specific brain IDPs are not included and are expected to be supplied by the user.
 

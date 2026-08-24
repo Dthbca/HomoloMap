@@ -3,6 +3,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from HomoloMap.datasets import fetch_ctype_ratio
+
 
 ROOT = Path(__file__).parents[1]
 
@@ -32,3 +34,23 @@ def test_original_d99_map_shapes():
     assert ratio.shape == (132, 226)
     assert density.shape == (141, 257)
 
+
+def test_packaged_bn_loaders_use_current_released_maps():
+    subclass = fetch_ctype_ratio(level="subclass", atlas="BN")
+    cluster = fetch_ctype_ratio(level="cluster", atlas="BN")
+    assert subclass.shape == (105, 23)
+    assert cluster.shape == (105, 71)
+    assert np.allclose(subclass.sum(axis=1), 1.0)
+    assert np.allclose(cluster.sum(axis=1), 1.0)
+    assert subclass.attrs["celltype_mapping"]["mapping_column"] == "subclass"
+
+
+def test_packaged_d99_loader_uses_cluster_mapping_dict():
+    subclass, audit = fetch_ctype_ratio(
+        level="subclass", atlas="D99", return_mapping=True
+    )
+    assert subclass.shape == (132, 23)
+    assert np.allclose(subclass.sum(axis=1), 1.0)
+    assert audit["n_original_types"] == 226
+    assert audit["n_mapped_types"] == 191
+    assert audit["n_unresolved_types"] == 35

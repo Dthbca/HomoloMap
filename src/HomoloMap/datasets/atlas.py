@@ -14,9 +14,15 @@ def ctype_ratio_agg(df, map_df=None, key='celltype', unmapped='drop',
     """Map macaque cell types to one explicit human homology annotation."""
     root_path = Path(__file__).parent
     if map_df is None:
-        map_df = pd.read_csv(os.path.join(root_path,'features/SpatialTranscriptomics/ctype_map.csv'),index_col=0)
+        map_df = pd.read_csv(
+            root_path / 'features' / 'SpatialTranscriptomics' /
+            'cluster_mapping_dict.csv'
+        ).set_index('plot')
     if key not in map_df.columns:
-        raise KeyError(f"Mapping column {key!r} is not present in ctype_map.csv")
+        raise KeyError(
+            f"Mapping column {key!r} is not present in "
+            "cluster_mapping_dict.csv"
+        )
     if unmapped not in {'raise', 'drop', 'keep'}:
         raise ValueError("unmapped must be 'raise', 'drop', or 'keep'")
     if not isinstance(df, pd.DataFrame) or df.empty:
@@ -65,35 +71,66 @@ def ctype_ratio_agg(df, map_df=None, key='celltype', unmapped='drop',
     return (agg_df, audit) if return_mapping else agg_df
 
 
-def fetch_ctype_ratio(level='subclass', smooth=True, mapping_column=None,
-                      unmapped='drop', renormalize=False, return_mapping=False):
-    root_path = Path(__file__).parent
-    if smooth:
-        ctype_ratio = pd.read_csv(os.path.join(root_path,'features/SpatialTranscriptomics/ctype_ratio_plot_FGC_smoothed.csv'),index_col=0)
-    else:
-        ctype_ratio = pd.read_csv(os.path.join(root_path,'features/SpatialTranscriptomics/ctype_ratio_plot_FGC.csv'),index_col=0)
-    
-    if level in ['subclass','cluster']:
-        ctype_ratio = ctype_ratio_agg(
-            ctype_ratio, key=mapping_column or level, unmapped=unmapped,
-            renormalize=renormalize, return_mapping=return_mapping)
+def _celltype_resource(filename):
+    return (Path(__file__).parent / 'features' / 'SpatialTranscriptomics' /
+            filename)
 
-    return ctype_ratio
 
-def fetch_ctype_density(level='subclass', smooth=True, mapping_column=None,
-                        unmapped='drop', renormalize=False, return_mapping=False):
-    root_path = Path(__file__).parent
-    if smooth:
-        ctype_density = pd.read_csv(os.path.join(root_path,'features/SpatialTranscriptomics/ctype_density_plot_FGC_smoothed.csv'),index_col=0)
-    else:
-        ctype_density = pd.read_csv(os.path.join(root_path,'features/SpatialTranscriptomics/ctype_density_plot_FGC.csv'),index_col=0)
-    
-    if level in ['subclass','cluster']:
-        ctype_density = ctype_ratio_agg(
-            ctype_density, key=mapping_column or level, unmapped=unmapped,
-            renormalize=renormalize, return_mapping=return_mapping)
+def fetch_ctype_ratio(level='subclass', smooth=None, mapping_column=None,
+                      unmapped='drop', renormalize=True, return_mapping=False,
+                      atlas='BN'):
+    """Load released mapped cell-type ratios in D99 or BN space.
 
-    return ctype_density
+    BN maps are the public, human-aligned products (23 subclasses or 71
+    clusters). D99 maps retain the original macaque regional sampling and are
+    aggregated with ``cluster_mapping_dict.csv``. ``smooth`` is retained only
+    for backwards compatibility; released maps are not smoothed here.
+    """
+    level = mapping_column or level
+    if level not in {'subclass', 'cluster'}:
+        raise ValueError("level must be 'subclass' or 'cluster'")
+    if atlas == 'BN':
+        n_types = {'subclass': 23, 'cluster': 71}[level]
+        data = pd.read_csv(
+            _celltype_resource(f'ctype_ratio_BN_{n_types}_{level}.csv'),
+            index_col=0,
+        )
+        data.index = data.index.astype(int)
+        audit = {
+            'source_space': 'macaque_D99_spatial_transcriptomics',
+            'target_space': 'human_BN_left_hemisphere',
+            'mapping_basis': 'joint_embedding_transcriptomic_homology',
+            'mapping_column': level,
+            'n_mapped_types': n_types,
+            'renormalized': True,
+            'resource': f'ctype_ratio_BN_{n_types}_{level}.csv',
+        }
+        data.attrs['celltype_mapping'] = audit
+        return (data, audit) if return_mapping else data
+    if atlas != 'D99':
+        raise ValueError("Released ratio maps support atlas='D99' or 'BN'")
+    data = pd.read_csv(_celltype_resource('ctype_ratio_plot_D99.csv'), index_col=0)
+    data.index = data.index.astype(int)
+    return ctype_ratio_agg(
+        data, key=level, unmapped=unmapped, renormalize=renormalize,
+        return_mapping=return_mapping,
+    )
+
+def fetch_ctype_density(level='subclass', smooth=None, mapping_column=None,
+                        unmapped='drop', renormalize=False,
+                        return_mapping=False, atlas='D99'):
+    """Load D99 cell density and aggregate it with the canonical map table."""
+    if atlas != 'D99':
+        raise ValueError(
+            "Density is released in D99 space; load atlas='D99' and use "
+            "HomoloMap.transforms.vol_relabel for another atlas."
+        )
+    data = pd.read_csv(_celltype_resource('ctype_density_plot_D99.csv'), index_col=0)
+    data.index = data.index.astype(int)
+    return ctype_ratio_agg(
+        data, key=mapping_column or level, unmapped=unmapped,
+        renormalize=renormalize, return_mapping=return_mapping,
+    )
 
 
 def fetch_layer_ratio(level='subclass', donor='M1', mask=True, mapping_column=None,

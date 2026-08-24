@@ -187,7 +187,7 @@ def _standardize_analysis_array(values, name):
 
 
 def prepare_analysis_data(data=None, feature_type='ratio', ctype_level='subclass',
-                          layer=False, mask=True, smooth=True, atlas='FGC',
+                          layer=False, mask=True, smooth=None, atlas='BN',
                           mapping_column=None, unmapped='drop', renormalize=False,
                           return_mapping=False):
     """Load, left-hemisphere filter, reparcellate, and align analysis tables."""
@@ -208,17 +208,24 @@ def prepare_analysis_data(data=None, feature_type='ratio', ctype_level='subclass
     elif feature_type == 'ratio':
         predictors, mapping = fetch_ctype_ratio(
             level=ctype_level, smooth=smooth, mapping_column=mapping_column,
-            unmapped=unmapped, renormalize=renormalize, return_mapping=True)
+            unmapped=unmapped, renormalize=renormalize, return_mapping=True,
+            atlas=atlas)
     else:
         predictors, mapping = fetch_ctype_density(
             level=ctype_level, smooth=smooth, mapping_column=mapping_column,
-            unmapped=unmapped, renormalize=renormalize, return_mapping=True)
-    if atlas != 'FGC':
+            unmapped=unmapped, renormalize=renormalize, return_mapping=True,
+            atlas='D99')
+    if feature_type == 'density' and atlas != 'D99':
         predictors = vol_relabel(
-            src='FGC', trg=atlas, data=predictors,
-            cross_species=False, method='mean'
+            src='D99', trg=atlas, data=predictors,
+            cross_species=True, method='mean'
         )
-    outcomes = fetch_enigma(atlas=atlas) if data is None else data
+    if data is None:
+        raise ValueError(
+            "data is required: provide brain IDPs indexed by the requested "
+            "atlas labels"
+        )
+    outcomes = data
     if isinstance(outcomes, pd.Series):
         outcomes = outcomes.to_frame(name=outcomes.name or 'feature')
     if not isinstance(outcomes, pd.DataFrame) or outcomes.empty:
@@ -237,7 +244,7 @@ def prepare_analysis_data(data=None, feature_type='ratio', ctype_level='subclass
     mapping['spatial_mapping'] = {
         'source_space': 'macaque_spatial_transcriptomics',
         'target_space': f'human_{atlas}_left_hemisphere',
-        'input_is_precomputed_human_map': atlas == 'FGC',
+        'input_is_precomputed_human_map': feature_type == 'ratio' and atlas == 'BN',
     }
     X.attrs['celltype_mapping'] = mapping
     return (X, Y, mapping) if return_mapping else (X, Y)

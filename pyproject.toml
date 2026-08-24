@@ -56,7 +56,15 @@ include-package-data = true
 where = ["src"]
 
 [tool.setuptools.package-data]
-HomoloMap = ["datasets/surfaces/**/*.gii"]
+HomoloMap = [
+  "datasets/annotation/*.csv",
+  "datasets/annotation/*.txt",
+  "datasets/features/*.csv",
+  "datasets/features/SpatialTranscriptomics/*.csv",
+  "datasets/surfaces/**/*.gii",
+  "datasets/surfaces/**/*.csv",
+  "datasets/volumes/*.nii.gz",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

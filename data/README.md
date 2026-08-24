@@ -62,6 +62,20 @@ assert subclass.shape == (105, 23)
 assert cluster.shape == (105, 71)
 ```
 
+The same canonical resources are bundled with the installed package:
+
+```python
+from HomoloMap.datasets import fetch_ctype_ratio
+
+subclass = fetch_ctype_ratio(level="subclass", atlas="BN")
+cluster = fetch_ctype_ratio(level="cluster", atlas="BN")
+d99_subclass = fetch_ctype_ratio(level="subclass", atlas="D99")
+```
+
+The public package intentionally excludes historical FGC cell-type tables,
+cached geodesic matrices, and the superseded `ctype_map.csv`. The loaders use
+`cluster_mapping_dict.csv` and exactly join each feature name to `plot`.
+
 ## Interpretation boundary
 
 The maps are atlas-level spatial estimates. They do not provide participant-level measurements and should not be interpreted as causal effects, direct human cell counts, or evidence that homologous cell types have identical abundance or molecular state in every biological reference.
