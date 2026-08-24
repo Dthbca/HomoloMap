@@ -5,12 +5,12 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "HomoloMap"
 version = "0.1.0"
-description = "Spatial analysis of homologous cell-type maps and brain imaging phenotypes"
+description = "Cross-species mapping of cellular architecture to human brain imaging phenotypes"
 readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}
 authors = [{name = "Dong Changsheng"}]
-keywords = ["neuroimaging", "spatial transcriptomics", "cell types", "spin test", "brain atlas"]
+keywords = ["neuroimaging", "spatial transcriptomics", "cell types", "cross-species", "imaging transcriptomics", "spin test", "brain atlas"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Science/Research",
@@ -60,4 +60,3 @@ HomoloMap = ["datasets/surfaces/**/*.gii"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-

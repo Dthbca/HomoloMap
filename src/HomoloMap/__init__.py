@@ -3,15 +3,17 @@
 OFF_SCREEN = False
 
 """
-HomoloMap: Mining Correlations Between Cell Type Maps and Brain Phenotypes
-===========================================================================
+HomoloMap: Linking Human Brain Organization to Cellular Architecture
+=====================================================================
 
-A comprehensive toolkit for analyzing spatial correlations between brain 
-cell type distributions and imaging-derived phenotypes (IDPs).
+A cross-species toolkit that combines cortical areal alignment with
+transcriptomic cell-type homology to construct human cortical cell-type maps
+and relate them to imaging-derived phenotypes (IDPs).
 
 Main Features
 -------------
-- Load and transform brain data across multiple atlas spaces
+- Construct and audit human-aligned subclass and cluster maps
+- Load and transform brain data across macaque and human atlas spaces
 - Compute spatial correlations with proper null models (spin tests)
 - Perform feature importance analysis (SHAP, dominance)
 - Visualize brain maps and statistical results
@@ -46,7 +48,7 @@ utils
 
 See Also
 --------
-Tutorial notebooks in the examples/ directory
+Tutorial notebooks in the tutorials/ directory
 Repository: https://github.com/Dthbca/HomoloMap
 """
 
