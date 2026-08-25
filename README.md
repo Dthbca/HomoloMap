@@ -4,9 +4,9 @@ HomoloMap is a Python package for relating regional human brain imaging-derived 
 
 The maps integrate whole-cortex macaque spatial transcriptomics from [Chen *et al.* (2023)](https://doi.org/10.1016/j.cell.2023.06.009) with the adult human single-nucleus taxonomy from [Siletti *et al.* (2023)](https://doi.org/10.1126/science.add7046). Cell-type correspondence is represented at subclass and cluster resolution, while cortical correspondence follows the joint-embedding alignment of [Xu *et al.* (2020)](https://doi.org/10.1016/j.neuroimage.2020.117346). Source maps in the [D99 atlas](https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/nonhuman/macaque_tempatl/atlas_d99v2.html) are released in the [Human Brainnetome Atlas](https://doi.org/10.1093/cercor/bhw157) space for direct integration with regional IDPs.
 
-[![HomoloMap workflow: macaque spatial transcriptomics and human single-nucleus references are harmonized into human-aligned Brainnetome cell-type maps for association with brain imaging-derived phenotypes.](docs/figures/HomoloMap_overview.png)](docs/figures/HomoloMap_overview.pdf)
+[![HomoloMap workflow: macaque spatial transcriptomics and human single-nucleus references are harmonized into human-aligned Brainnetome cell-type maps for association with brain imaging-derived phenotypes.](docs/figures/HomoloMap_overview.png)]
 
-*Workflow overview. Transcriptomic and cortical correspondences project spatial cell-type measurements into Brainnetome regions, where they can be analysed with user-supplied brain IDPs. Click the figure for the vector PDF.*
+*Workflow overview. Transcriptomic and cortical correspondences project spatial cell-type measurements into Brainnetome regions, where they can be analysed with user-supplied brain IDPs.*
 
 ## Main capabilities
 
